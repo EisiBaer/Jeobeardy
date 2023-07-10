@@ -1,0 +1,187 @@
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "~bootstrap/scss/functions";
+
+
+@font-face {
+  font-family: "Urbanist";
+  font-weight: 400;
+  font-style: normal;
+  font-display: auto;
+  unicode-range: U+000-5FF;
+  src: local("Urbanist"), url(@/assets/fonts/Urbanist-Regular.woff2) format("woff2");
+}
+
+/* COLOR THEME */
+
+/* SCSS HEX */
+$raisin-black: #272838ff;
+$teal: #0e7b81ff;
+$teal-darkened: #0d6064;
+$tiffany-blue: #7dded9ff;
+$light-coral: #eb8a90ff;
+$cyclamen: #e86a92ff;
+
+$space-cadet: #2b2d42ff;
+$cool-gray: #8d99aeff;
+$celadon: #95d7aeff;
+$green-active: #158a42;
+$tangerine: #f28f3bff;
+$sandy-brown: #ee964bff;
+$prussian-blue: #0b3954ff;
+$oxfort-blue: #13273eff;
+
+$mint: #21D19F;
+$malachite: #53DD6C;
+$rusty-red: #D33F49;
+$amaranth: #DF3B57;
+$scarlet: #FF331F;
+$rusty-scarlet: #E53A35;
+
+// /* SCSS RGB */
+// $raisin-black: rgba(39, 40, 56, 1);
+// $teal: rgba(14, 123, 129, 1);
+// $tiffany-blue: rgba(125, 222, 217, 1);
+// $light-coral: rgba(235, 138, 144, 1);
+// $cyclamen: rgba(232, 106, 146, 1);
+
+// /* SCSS Gradient */
+// $gradient-top: linear-gradient(0deg, #272838ff, #0e7b81ff, #7dded9ff, #eb8a90ff, #e86a92ff);
+// $gradient-right: linear-gradient(90deg, #272838ff, #0e7b81ff, #7dded9ff, #eb8a90ff, #e86a92ff);
+// $gradient-bottom: linear-gradient(180deg, #272838ff, #0e7b81ff, #7dded9ff, #eb8a90ff, #e86a92ff);
+// $gradient-left: linear-gradient(270deg, #272838ff, #0e7b81ff, #7dded9ff, #eb8a90ff, #e86a92ff);
+// $gradient-top-right: linear-gradient(45deg, #272838ff, #0e7b81ff, #7dded9ff, #eb8a90ff, #e86a92ff);
+// $gradient-bottom-right: linear-gradient(135deg, #272838ff, #0e7b81ff, #7dded9ff, #eb8a90ff, #e86a92ff);
+// $gradient-top-left: linear-gradient(225deg, #272838ff, #0e7b81ff, #7dded9ff, #eb8a90ff, #e86a92ff);
+// $gradient-bottom-left: linear-gradient(315deg, #272838ff, #0e7b81ff, #7dded9ff, #eb8a90ff, #e86a92ff);
+// $gradient-radial: radial-gradient(#272838ff, #0e7b81ff, #7dded9ff, #eb8a90ff, #e86a92ff);
+
+$primary: $prussian-blue;
+$secondary: $tiffany-blue;
+$danger: #a41522;
+$tertiary: $teal-darkened;
+$accent-primary: $teal;
+$accent-secondary: $teal-darkened;
+$pink-accent-primary: $cyclamen;
+$pink-accent-secondary: $light-coral;
+$dark-primary: $oxfort-blue;
+$dark-secondary: $space-cadet;
+$dark-blue: $prussian-blue;
+
+$body-bg: $dark-primary;
+$body-color: #f0dcdc;
+$link-color: #f0dcdc; 
+
+//Form Control
+$form-file-button-bg: shade-color($prussian-blue, 10%);
+$input-disabled-bg: shade-color($oxfort-blue, 10%);
+
+//Accordion
+$accordion-button-active-bg: shade-color($body-bg, 5%);
+$accordion-button-active-color: #f0dcdc;
+
+
+//Modal
+$modal-content-bg: $dark-blue;
+
+
+
+$font-family-base: "Urbanist";
+
+
+
+// 2. Include any default variable overrides here
+// $form-select-indicator-color: $primary;
+// $form-select-border-color: $primary;
+// $input-border-color: $dark-blue;
+// $input-box-shadow: $pink-accent-primary;
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "~bootstrap/scss/variables";
+
+
+
+$custom-colors: (
+  "dark-primary": $dark-primary,
+  "dark-secondary": $dark-secondary,
+  "dark-blue": $dark-blue,
+  "tertiary": $tertiary,
+  "accent-primary": $accent-primary,
+  "accent-secondary": $accent-secondary,
+  "pink-accent-primary": $pink-accent-primary,
+  "pink-accent-primary-disabled": shade-color( $pink-accent-primary, 40%),
+  "pink-accent-secondary": $pink-accent-secondary,
+  "correct-accent-primary": $malachite,
+  "correct-accent-secondary": $mint,
+  "wrong-accent-primary": $rusty-scarlet,
+  "wrong-accent-secondary": $scarlet,
+  "gray": $gray-500,
+);
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+// 4. Include any default map overrides here
+
+// 5. Include remainder of required parts
+@import "~bootstrap/scss/bootstrap";
+// @import "~bootstrap/scss/mixins";
+// @import "~bootstrap/scss/root";
+
+// // 6. Optionally include any other parts as needed
+@import "~bootstrap/scss/utilities";
+// @import "~bootstrap/scss/reboot";
+// @import "~bootstrap/scss/type";
+// @import "~bootstrap/scss/images";
+// @import "~bootstrap/scss/containers";
+// @import "~bootstrap/scss/grid";
+// @import "~bootstrap/scss/helpers";
+
+$utilities: map-merge(
+  $utilities,
+  (
+    "border-color": map-merge(
+      map-get($utilities, "border-color"),
+      (
+        state: hover,
+      ),
+    ),
+  )
+);
+
+// "rounded-start": (
+//   property: border-bottom-left-radius border-top-left-radius,
+//   class: rounded-start,
+//   values: (null: var(--#{$prefix}border-radius))
+// ),
+
+
+
+// // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
+@import "~bootstrap/scss/utilities/api";
+
+// // 8. Add additional custom code here
+
+.pointer {
+  cursor: pointer;
+}
+
+.buzzer{
+	height: 10rem;
+	width: 10rem;
+	cursor: pointer;
+  background-color: $pink-accent-primary;
+}
+
+.buzzer:active{
+  background-color: shade-color( $pink-accent-primary, 10% );
+  transform: translateY( 3px );
+  transition: transform ease 0.1s;
+}
+
+.buzzer-answering{
+  background-color: $green-active;
+}
+
+.buzzer-answering:active{
+  background-color: shade-color( $green-active, 10% );
+}
