@@ -12,12 +12,16 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  isPlayerChoosing: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["boardEntryClicked", "questionAnswered", "questionAnsweredRevert" ])
 
 function boardEntryCardClicked( categoryIndex, boardEntryIndex ){
-  if( props.isHost ){
+  if( props.isHost || props.isPlayerChoosing ){
     emit("boardEntryClicked", categoryIndex, boardEntryIndex);
   }
 }
@@ -41,7 +45,8 @@ function boardEntryCardClicked( categoryIndex, boardEntryIndex ){
               />
               <template v-for="( boardEntry, boardEntryIndex ) of category.boardEntries" :key="boardEntryIndex">
                 <BoardEntryCard
-                  :isHost="isHost"
+                  :isHost="props.isHost"
+                  :isPlayerChoosing="props.isPlayerChoosing"
                   :isBeingPlayed="props.isBeingPlayed"
                   :boardEntry="boardEntry"
                   @boardEntryCardClicked="boardEntryCardClicked( categoryIndex, boardEntryIndex )"

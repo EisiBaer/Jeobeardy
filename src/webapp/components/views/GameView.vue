@@ -29,7 +29,11 @@ const props = defineProps({
   isBeingPlayed: {
     type: Boolean,
     default: true,
-  }
+  },
+  isPlayerChoosing: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["boardEntryClicked", "specificQuestionLayerSelected", "showBoard", "playerBuzzered", "playAudio", "stopAudio",
@@ -119,6 +123,7 @@ watch(
           :board="props.board"
           :isHost="props.isHost"
           :isBeingPlayed="props.isBeingPlayed"
+          :isPlayerChoosing="props.isPlayerChoosing"
           @boardEntryClicked="boardEntryClicked"
           @questionAnswered="questionAnswered"
           @questionAnsweredRevert="questionAnsweredRevert"

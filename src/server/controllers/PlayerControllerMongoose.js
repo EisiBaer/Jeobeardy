@@ -64,6 +64,26 @@ exports.setAllPlayersAcceptAnswers = ( playerIds, acceptAnswersValue ) => {
 }
 
 /**
+ * Sets one player as isChoosing and other players as isChoosing false
+ * @param {String} choosingPlayerId
+ * @param {Array} notChoosingPlayerIds
+ * @returns A promise which resolves with the choosing player
+ */
+exports.setAllPlayersAcceptAnswers = ( choosingPlayerId, notChoosingPlayerIds ) => {
+  return new Promise((resolve, reject) => {
+    let promiseSetChoosing = PlayerModel.updateOne( { _id: choosingPlayerId }, { isChoosing: true } );
+    let promiseSetNotChoosing = PlayerModel.updateMany( { _id: { $in : notChoosingPlayerIds } }, { isChoosing: false } );
+    Promise.all( [ promiseSetChoosing, promiseSetNotChoosing ] )
+    .then( ( resArr ) => {
+      resolve( resArr[0] );
+    })
+    .catch( ( err ) => {
+      reject( err );
+    })
+  });
+}
+
+/**
  * Checks if a player is allowed to currently answer a question
  * @param {String} playerId
  * @returns A promise which resolves with wheter the player is allowed to answer or not. Rejects if an error occurs or host is not found.
@@ -74,6 +94,29 @@ exports.checkPlayerAcceptAnswers = ( playerId ) => {
     .then( ( player ) => {
       if( player ){
         resolve( player.acceptAnswers );
+      } else {
+        let playerNotFoundError = new Error(`No player found with id "${playerId}"`);
+        playerNotFoundError.name = "NotFoundError";
+        reject(playerNotFoundError);
+      }
+    })
+    .catch( ( err ) => {
+      reject( err );
+    })
+  });
+}
+
+/**
+ * Checks if a player is allowed to choose a BoardEntry
+ * @param {String} playerId
+ * @returns A promise which resolves with wheter the player is allowed to choose a BoardEntry or not. Rejects if an error occurs.
+ */
+exports.checkPlayerCanChoose = ( playerId ) => {
+  return new Promise((resolve, reject) => {
+    PlayerModel.findById( playerId )
+    .then( ( player ) => {
+      if( player ){
+        resolve( player.isChoosing );
       } else {
         let playerNotFoundError = new Error(`No player found with id "${playerId}"`);
         playerNotFoundError.name = "NotFoundError";

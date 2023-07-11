@@ -23,6 +23,7 @@ export const useGameStore = defineStore('game', {
       currentQuestion: {},
       board: new Board( undefined, "New Board", []),
       acceptAnswers: false,
+      isPlayerChoosing: false,
     }
   },
   actions: {

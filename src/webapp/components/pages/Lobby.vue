@@ -29,6 +29,9 @@ function boardSelected( id ){
 
 onMounted( () => {
   gameStore.addSocketListener("gameStarted", ( data ) => {
+    if( !gameStore.isHost ){
+      gameStore.isPlayerChoosing = data.payload.choosingPlayer === gameStore.playerId;
+    }
     router.push( { name: "gameWithGameId", params: { gameId: route.params.gameId } } );
   });
 

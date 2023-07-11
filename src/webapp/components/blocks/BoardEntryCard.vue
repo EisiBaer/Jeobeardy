@@ -12,6 +12,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  isPlayerChoosing: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["boardEntryCardClicked", "boardEntryAnsweredClicked", "boardEntryAnsweredRevertClicked" ]);
@@ -42,7 +46,7 @@ function boardEntryAnsweredRevertClicked(){
       { 'border-pink-accent-primary-disabled' : props.boardEntry.isAnswered },
       { 'border-pink-accent-primary' : !props.boardEntry.isAnswered },
       { 'bg-dark-primary': props.boardEntry.isAnswered },
-      { 'pointer': !props.boardEntry.isAnswered && props.isHost },
+      { 'pointer': !props.boardEntry.isAnswered && ( props.isHost || props.isPlayerChoosing ) },
     ]"
     @click="questionCardClicked"
   >

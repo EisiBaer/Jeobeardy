@@ -226,6 +226,8 @@ function showBoard(){
 function boardEntryClicked( cIndex, entryIndex ){
   if( gameStore.isHost ){
     gameStore.sendEvent( "selectBoardEntry", { categoryIndex: cIndex, boardEntryIndex: entryIndex } );
+  } else if( gameStore.isPlayerChoosing ){
+    gameStore.sendEvent( "playerChooseBoardEntry", { categoryIndex: cIndex, boardEntryIndex: entryIndex } );
   }
 }
 
@@ -390,6 +392,7 @@ onBeforeRouteLeave((to, from) => {
               :bEIndex="boardEntryIndex"
               :showingBottomView="true"
               :isHost="gameStore.isHost"
+              :isPlayerChoosing="gameStore.isPlayerChoosing"
               :anyPlayerIsAnswering="anyPlayerIsAnswering"
               :isBeingPlayed="isBeingPlayed"
               @showBoard="showBoard"
