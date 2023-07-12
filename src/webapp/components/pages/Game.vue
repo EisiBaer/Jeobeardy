@@ -183,6 +183,18 @@ function setUpListeners(){
       gameStore.players.splice( playerIndex, 1 );
     }
   });
+  gameStore.addSocketListener("playerChoseBoardEntry", ( data ) => {
+    let categoryIndex = data.payload.categoryIndex;
+    let boardEntryIndex = data.payload.boardEntryIndex;
+    let player = gameStore.players.find( playerEntry => playerEntry._id === data.payload.choosingPlayer );
+    if( player ){
+      gameStore.chosenEntry = {
+        player: player,
+        categoryIndex: categoryIndex,
+        boardEntryIndex: boardEntryIndex,
+      }
+    }
+  });
 }
 
 function playerBuzzered( data ){
@@ -395,6 +407,7 @@ onBeforeRouteLeave((to, from) => {
               :isPlayerChoosing="gameStore.isPlayerChoosing"
               :anyPlayerIsAnswering="anyPlayerIsAnswering"
               :isBeingPlayed="isBeingPlayed"
+              :chosenEntry="gameStore.chosenEntry"
               @showBoard="showBoard"
               @showQuestion="showQuestion"
               @showAnswer="showAnswer"

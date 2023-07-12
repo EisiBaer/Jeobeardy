@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 const gameController = require("../controllers/GameControllerMongoose");
 const playerController = require("../controllers/PlayerControllerMongoose");
 
@@ -130,10 +132,14 @@ exports.handleMessage = ( gameSocketList, socket, dataRaw ) => {
           gameController.findGameByIdAndSetStateAndPopulateBoard( socket.locals.game, "IN_PROGRESS" )
           .then( ( game ) => {
             gameOuter = game;
-            let randomPlayerIndex = crypto.randomInt(0, game.players.length );
-            let randomPlayer = game.players[randomPlayerIndex];
-            let otherPlayers = game.players.splice(randomPlayerIndex, 1);
-            return playerController.setPlayerIsChoosingAndOthersNotChoosing( randomPlayer, otherPlayers );
+            if( game.players.length > 0 ){
+              let randomPlayerIndex = crypto.randomInt(0, game.players.length );
+              let randomPlayer = game.players[randomPlayerIndex];
+              let otherPlayers = game.players.splice(randomPlayerIndex, 1);
+              return playerController.setPlayerIsChoosingAndOthersNotChoosing( randomPlayer, otherPlayers );
+            } else {
+              return -1;
+            }
           })
           .then( ( choosingPlayer ) => {
             let message = "Game is starting";
@@ -159,12 +165,12 @@ exports.handleMessage = ( gameSocketList, socket, dataRaw ) => {
         }
         break;
       case "playerChooseBoardEntry":
-        playerController.checkPlayerCanChoose()
-        .then( ( canChoose ) => {
-          if( canChoose ){
-            let message = `BoardEntry ${payload.boardEntryIndex} selected`;
-            let sendingData = { categoryIndex: payload.categoryIndex, boardEntryIndex: payload.boardEntryIndex };
-            sendAllPlayers( socket, gameSocketList, "boardEntrySelected", message, sendingData );
+        playerController.checkPlayerCanChoose( socket.locals.player )
+        .then( ( player ) => {
+          if( player.isChoosing ){
+            let message = `Category ${payload.categoryIndex} with BoardEntry ${payload.boardEntryIndex} selected`;
+            let sendingData = { categoryIndex: payload.categoryIndex, boardEntryIndex: payload.boardEntryIndex, choosingPlayer: player._id.toString() };
+            sendToHost( socket, gameSocketList, "playerChoseBoardEntry", message, sendingData );
             resolve();
           } else {
             resolve();

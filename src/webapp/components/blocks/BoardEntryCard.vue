@@ -16,6 +16,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  playerChose: {
+    type: [Boolean, String],
+    default: false,
+  },
 });
 
 const emit = defineEmits(["boardEntryCardClicked", "boardEntryAnsweredClicked", "boardEntryAnsweredRevertClicked" ]);
@@ -60,6 +64,11 @@ function boardEntryAnsweredRevertClicked(){
             <font-awesome-icon icon="fa-solid fa-square-minus" size="lg" />
           </button>
         </div>
+        <div v-if="playerChose !== false" class="position-absolute start-0 bottom-0 mb-2 w-100">
+          <span class="bg-pink-accent-primary p-1 ms-2 max-w-50" @click.stop="boardEntryAnsweredRevertClicked">
+            {{ props.playerChose.name }} chooses this
+          </span>
+        </div>
         <h5 class="mb-0 user-select-none">
           {{ props.boardEntry.points }}
         </h5> 
@@ -72,5 +81,8 @@ function boardEntryAnsweredRevertClicked(){
 .board-entry-card{
   max-height: 20%;
   max-width: 90vw;
+}
+.max-w-50{
+  max-width: 50%;
 }
 </style>
