@@ -17,10 +17,14 @@ const props = defineProps({
   acceptAnswers: {
     type: Boolean,
     default: false,
-  }
+  },
+  isEntryShown: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits( "manualPointsAdjustment", "answerRuled", "revealPlayerAnswers" );
+const emit = defineEmits( "manualPointsAdjustment", "answerRuled", "revealPlayerAnswers", "letPlayerChoose" );
 
 let buttonDivHeight = ref("3rem");
 let navbarHeight = ref("4rem");
@@ -46,6 +50,10 @@ function revealPlayerAnswer( playerId ){
   emit("revealPlayerAnswers", [playerId] );
 }
 
+function letPlayerChoose( playerId ){
+  emit("letPlayerChoose", playerId );
+}
+
 </script>
 
 <template>
@@ -64,9 +72,11 @@ function revealPlayerAnswer( playerId ){
             :player="player"
             :isHost="props.isHost"
             :acceptAnswers="props.acceptAnswers"
+            :isEntryShown="props.isEntryShown"
             @manualPointsAdjustment="( arePointsAdded ) => manualPointsAdjustment( player._id, player.name, arePointsAdded )"
             @answerRuled="( isAnswerCorrect ) => answerRuled( player._id, player.name, isAnswerCorrect )"
             @revealPlayerAnswer="revealPlayerAnswer"
+            @letPlayerChoose="letPlayerChoose"
           />  
         </template>
       </div>

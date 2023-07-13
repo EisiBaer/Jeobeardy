@@ -4,7 +4,7 @@ import { createPinia  } from "pinia";
 import { FontAwesomeIcon, FontAwesomeLayers } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faDragon, faRightToBracket, faUsers, faUserPlus, faSpinner, faPlusSquare, faBorderAll, faPen, faTrash, faAngleDown, faAngleUp,
-         faPlus, faMinus, faAngleRight, faSquare, faPlay, faCircleExclamation, faSquareCheck, faSquareMinus } from "@fortawesome/free-solid-svg-icons";
+         faPlus, faMinus, faAngleRight, faSquare, faPlay, faCircleExclamation, faSquareCheck, faSquareMinus, faHandPointer } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser, faSquarePlus } from "@fortawesome/free-regular-svg-icons";
 
 
@@ -39,6 +39,7 @@ library.add({
   faSquareMinus,
   faPlay,
   faCircleExclamation,
+  faHandPointer,
 });
 
 

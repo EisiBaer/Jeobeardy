@@ -21,13 +21,13 @@ const props = defineProps({
 
 const emit = defineEmits(["boardEntryClicked", "questionAnswered", "questionAnsweredRevert" ])
 
-function playerChosenBoardEntry( categoryIndex, boardEntryIndex ){
-  if( props.chosenEntry !== undefined && ( props.chosenEntry.categoryIndex === categoryIndex || props.chosenEntry.boardEntryIndex === boardEntryIndex ) ){
-    return props.chosenEntry.player.name;
-  } else {
-    return false;
-  }
-}
+// function playerChosenBoardEntry( categoryIndex, boardEntryIndex ){
+//   if( props.chosenEntry !== undefined && ( props.chosenEntry.categoryIndex === categoryIndex || props.chosenEntry.boardEntryIndex === boardEntryIndex ) ){
+//     return props.chosenEntry.player.name;
+//   } else {
+//     return false;
+//   }
+// }
 
 function boardEntryCardClicked( categoryIndex, boardEntryIndex ){
   if( props.isHost || props.isPlayerChoosing ){
@@ -58,7 +58,9 @@ function boardEntryCardClicked( categoryIndex, boardEntryIndex ){
                   :isPlayerChoosing="props.isPlayerChoosing"
                   :isBeingPlayed="props.isBeingPlayed"
                   :boardEntry="boardEntry"
-                  :playerChose="playerChosenBoardEntry( categoryIndex, boardEntryIndex )"
+                  :boardEntryIndex="boardEntryIndex"
+                  :categoryIndex="categoryIndex"
+                  :chosenEntry="props.chosenEntry"
                   @boardEntryCardClicked="boardEntryCardClicked( categoryIndex, boardEntryIndex )"
                   @boardEntryAnsweredClicked="emit( 'questionAnswered', categoryIndex, boardEntryIndex )"
                   @boardEntryAnsweredRevertClicked="emit( 'questionAnsweredRevert', categoryIndex, boardEntryIndex )"

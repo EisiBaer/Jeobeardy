@@ -4,6 +4,14 @@ import { computed } from 'vue';
 
 const props = defineProps({
   boardEntry: Object,
+  boardEntryIndex: {
+    type: Number,
+    default: -1,
+  },
+  categoryIndex: {
+    type: Number,
+    default: -1,
+  },
   isHost: {
     type: Boolean,
     default: false,
@@ -16,10 +24,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  playerChose: {
-    type: [Boolean, String],
-    default: false,
-  },
+  chosenEntry: Object,
 });
 
 const emit = defineEmits(["boardEntryCardClicked", "boardEntryAnsweredClicked", "boardEntryAnsweredRevertClicked" ]);
@@ -64,9 +69,9 @@ function boardEntryAnsweredRevertClicked(){
             <font-awesome-icon icon="fa-solid fa-square-minus" size="lg" />
           </button>
         </div>
-        <div v-if="playerChose !== false" class="position-absolute start-0 bottom-0 mb-2 w-100">
-          <span class="bg-pink-accent-primary p-1 ms-2 max-w-50" @click.stop="boardEntryAnsweredRevertClicked">
-            {{ props.playerChose.name }} chooses this
+        <div v-if="props.chosenEntry !== undefined && ( props.chosenEntry.categoryIndex === props.categoryIndex && props.chosenEntry.boardEntryIndex === props.boardEntryIndex )" class="position-absolute start-0 bottom-0 mb-2 w-100">
+          <span class="bg-pink-accent-primary p-1 ms-2 max-w-50 rounded-1" @click.stop="boardEntryAnsweredRevertClicked">
+            {{ props.chosenEntry.player.name }}
           </span>
         </div>
         <h5 class="mb-0 user-select-none">

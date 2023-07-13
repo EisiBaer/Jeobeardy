@@ -64,6 +64,10 @@ const anyPlayerIsAnswering = computed( () => {
   return gameStore.players.findIndex( playerEntry => playerEntry.isAnswering ) !== -1;
 });
 
+const isBeingPlayed = computed( () => {
+  return route.path.includes("game");
+});
+
 
 function boardSelected(){
   selectedObject.value = gameStore.board;
@@ -78,6 +82,7 @@ function selectBoardEntryWithCategory( cIndex, entryIndex ){
 
 function setUpListeners(){
   gameStore.addSocketListener("boardEntrySelected", ( data ) => {
+    gameStore.acceptAnswers = false;
     showingAnswer.value = false;
     showingQuestion.value = false;
     selectBoardEntryWithCategory( data.payload.categoryIndex, data.payload.boardEntryIndex );
@@ -151,6 +156,9 @@ function setUpListeners(){
   });
   gameStore.addSocketListener("questionLocked", ( _data ) => {
     gameStore.acceptAnswers = false;
+    for( let i in gameStore.players ){
+      gameStore.players[i].isAnswering = true;
+    }
   });
   gameStore.addSocketListener("playerAnswersRevealed", ( data ) => {
     for( let playerAnswer of data.payload.revealedAnswers ){
@@ -195,6 +203,9 @@ function setUpListeners(){
       }
     }
   });
+  gameStore.addSocketListener("playerCanChoose", ( data ) => {
+    gameStore.setPlayerOnIndexChoosing( data.payload.choosingPlayer );
+  });
 }
 
 function playerBuzzered( data ){
@@ -216,7 +227,7 @@ function removeListeners(){
   gameStore.removeSocketListener("boardEntrySelected");
   gameStore.removeSocketListener("boardSelected");
   gameStore.removeSocketListener("pointsAdjusted");
-  gameStore.removeSocketListener("playerAnswerRevealed");boardIsLoading
+  gameStore.removeSocketListener("playerAnswerRevealed");
   gameStore.removeSocketListener("playerAnswerTextUpdated");
   gameStore.removeSocketListener("audioPlaying")
   gameStore.removeSocketListener("audioStopped")
@@ -325,6 +336,18 @@ function lockQuestion(){
   gameStore.sendEvent("lockQuestion", {});
 }
 
+function letNextPlayerChoose(){
+  if( gameStore.isHost ){
+    gameStore.sendEvent("letPlayerChoose", {});
+  }
+}
+
+function letSpecificPlayerChoose( playerId ){
+  if( gameStore.isHost ){
+    gameStore.sendEvent("letPlayerChoose", { playerId: playerId } );
+  }
+}
+
 function revealPlayerAnswers( playerIds ){
   let payload = [];
   let ids;
@@ -430,10 +453,12 @@ onBeforeRouteLeave((to, from) => {
                 :questionPoints="(isBoardSelected ? 0 : Number(selectedObject.points) )"
                 :answerInteraction="(isBoardSelected ? '' : selectedObject.answer.answerInteraction )"
                 :isHost="gameStore.isHost"
-                :acceptAnswers="gameStore.acceptAnswers && !isBoardSelected"
+                :acceptAnswers="gameStore.acceptAnswers"
+                :isEntryShown="!isBoardSelected"
                 @manualPointsAdjustment="manualPointsAdjustment"
                 @answerRuled="answerRuled"
                 @revealPlayerAnswers="revealPlayerAnswers"
+                @letPlayerChoose="letSpecificPlayerChoose"
               />
             </div>
 
@@ -460,6 +485,7 @@ onBeforeRouteLeave((to, from) => {
               @revealPlayerAnswers="revealPlayerAnswers"
               @questionAnswered="questionAnswered"
               @questionAnsweredRevert="questionAnsweredRevert"
+              @letNextPlayerChoose="letNextPlayerChoose"
             />
           </div>
 

@@ -128,22 +128,27 @@ exports.handleMessage = ( gameSocketList, socket, dataRaw ) => {
         break;
       case "startGame":
         if( socket.locals.isHost ){
-          let gameOuter;
           gameController.findGameByIdAndSetStateAndPopulateBoard( socket.locals.game, "IN_PROGRESS" )
           .then( ( game ) => {
-            gameOuter = game;
             if( game.players.length > 0 ){
-              let randomPlayerIndex = crypto.randomInt(0, game.players.length );
-              let randomPlayer = game.players[randomPlayerIndex];
-              let otherPlayers = game.players.splice(randomPlayerIndex, 1);
-              return playerController.setPlayerIsChoosingAndOthersNotChoosing( randomPlayer, otherPlayers );
+              let randomPlayer = game.players[ crypto.randomInt(0, game.players.length ) ];
+              game.playerChoosing = {
+                playerId: randomPlayer._id.toString(),
+                categoryIndex: null,
+                boardEntryIndex: null,
+              }
+              return game.save();
             } else {
-              return -1;
+              return game;
             }
           })
-          .then( ( choosingPlayer ) => {
+          .then( ( game ) => {
+            let choosingPlayer = undefined
+            if( game.playerChoosing ){
+              choosingPlayer = game.playerChoosing.playerId;
+            }
             let message = "Game is starting";
-            let sendingData = { gameId: gameOuter._id, board: gameOuter.board, choosingPlayer: choosingPlayer._id  }; 
+            let sendingData = { gameId: game._id, board: game.board, choosingPlayer: choosingPlayer }; 
             sendAllPlayers( socket, gameSocketList, "gameStarted", message, sendingData);
             resolve();
           })
@@ -164,19 +169,69 @@ exports.handleMessage = ( gameSocketList, socket, dataRaw ) => {
           reject( new Error("Message not sent by host") );
         }
         break;
+      case "letPlayerChoose":
+        if( socket.locals.isHost ){
+          gameController.findGameById( socket.locals.game )
+          .then( ( game ) => {
+            if( data.payload.playerId ){
+              game.playerChoosing = {
+                playerId: data.payload.playerId,
+                categoryIndex: null,
+                boardEntryIndex: null,
+              }
+              return game.save();
+            } else {
+              let currentChoosingPlayer = game.players.findIndex( playerEntry => playerEntry._id.toString() === game.playerChoosing.playerId );
+              if( currentChoosingPlayer !== -1 ){
+                let newChoosingPlayerIndex = currentChoosingPlayer + 1;
+                if( newChoosingPlayerIndex === game.players.length ){
+                  newChoosingPlayerIndex = 0;
+                }
+                game.playerChoosing = {
+                  playerId: game.players[newChoosingPlayerIndex]._id.toString(),
+                  categoryIndex: null,
+                  boardEntryIndex: null,
+                }
+                return game.save();
+              } else {
+                return game;
+              }
+            }
+          })
+          .then( ( game ) => {
+            let message = `Player ${game.playerChoosing.playerId} can choose a BoardEntry`;
+            let sendingData = { choosingPlayer: game.playerChoosing.playerId };
+            sendAllPlayers( socket, gameSocketList, "playerCanChoose", message, sendingData );
+            resolve();
+          })
+          .catch( ( err ) => {
+            reject( err );
+          });
+        }
+        break;
       case "playerChooseBoardEntry":
-        playerController.checkPlayerCanChoose( socket.locals.player )
-        .then( ( player ) => {
-          if( player.isChoosing ){
-            let message = `Category ${payload.categoryIndex} with BoardEntry ${payload.boardEntryIndex} selected`;
-            let sendingData = { categoryIndex: payload.categoryIndex, boardEntryIndex: payload.boardEntryIndex, choosingPlayer: player._id.toString() };
-            sendToHost( socket, gameSocketList, "playerChoseBoardEntry", message, sendingData );
-            resolve();
+        gameController.findGameById( socket.locals.game )
+        .then( ( game ) => {
+          if( socket.locals.player === game.playerChoosing.playerId ){
+            game.playerChoosing.categoryIndex = payload.categoryIndex;
+            game.playerChoosing.boardEntryIndex = payload.boardEntryIndex;
+            return game.save();
           } else {
-            resolve();
+            throw new Error("Message not sent by choosing Player");
           }
         })
-        .catch();  
+        .then( ( game ) => {
+          let chosenCategoryIndex = game.playerChoosing.categoryIndex;
+          let chosenBoardEntryIndex = game.playerChoosing.boardEntryIndex;
+          let choosingPlayer = game.playerChoosing.playerId;
+          let message = `Category ${chosenCategoryIndex} with BoardEntry ${chosenBoardEntryIndex} selected`;
+          let sendingData = { categoryIndex: chosenCategoryIndex, boardEntryIndex: chosenBoardEntryIndex, choosingPlayer: choosingPlayer };
+          sendAllPlayers( socket, gameSocketList, "playerChoseBoardEntry", message, sendingData );
+          resolve();
+        })
+        .catch( ( err ) => {
+          reject( err );
+        });  
         break;
       case "selectBoard":
         if( socket.locals.isHost ){

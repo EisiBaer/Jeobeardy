@@ -12,7 +12,7 @@ const props = defineProps({
 	}
 });
 
-const emit = defineEmits( "lockQuestion", "revealPlayerAnswers" );
+const emit = defineEmits( "lockQuestion", "revealPlayerAnswers", "letNextPlayerChoose" );
 
 let boardEntry = computed( () => {
 	if( props.objToDisplay === "BoardEntry" ){
@@ -27,6 +27,10 @@ function lockQuestion(){
 
 function revealPlayerAnswers(){
 	emit("revealPlayerAnswers");
+}
+
+function letNextPlayerChoose(){
+	emit("letNextPlayerChoose");
 }
 
 
@@ -48,6 +52,16 @@ function revealPlayerAnswers(){
 			</div>
 			<div class="col-xl-6 col-12">
 				<button class="btn btn-pink-accent-primary w-100 h-100" @click="revealPlayerAnswers" :disabled="props.acceptAnswers">Reveal All Answers</button>
+			</div>
+		</div>
+	</div>
+	<div
+		v-else
+		class="d-flex flex-column justify-content-center border-top border-pink-accent-primary interaction-size"
+	>
+		<div class="row mx-2">
+			<div class="col-12 text-center">
+				<button class="btn btn-pink-accent-primary" @click="letNextPlayerChoose">Let Next Player Choose</button>
 			</div>
 		</div>
 	</div>

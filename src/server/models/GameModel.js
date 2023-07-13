@@ -8,6 +8,7 @@ const GameSchema = new Schema({
   board: { type: Schema.Types.ObjectId, ref: "Board", required: false },
   players: { type: [Schema.Types.ObjectId], ref: "Player", required: true },
   acceptAnswers: { type: Boolean, required: true, default: false },
+  playerChoosing: { type: Object },
   answeredBoardEntries: { type: [Object], default: [] },
   state: { type: String, required: true, default: "CREATED" },
   createdTimestamp: { type: Date, required: true, default: new Date() },

@@ -28,6 +28,13 @@ export const useGameStore = defineStore('game', {
     }
   },
   actions: {
+    setPlayerOnIndexChoosing( playerId ){
+      let playerIndex = this.players.findIndex( playerEntry => playerEntry._id === playerId );
+      for( let i in this.players ){
+        this.players[i].isChoosing = Number( i ) === Number( playerIndex );
+      }
+      this.isPlayerChoosing = playerId === this.playerId;
+    },
     setBoardWithConversion( board ){
       this.board = boardResponseToBoardModel( board );
     },

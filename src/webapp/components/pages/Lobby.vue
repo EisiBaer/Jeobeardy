@@ -32,6 +32,10 @@ onMounted( () => {
     if( !gameStore.isHost ){
       gameStore.isPlayerChoosing = data.payload.choosingPlayer === gameStore.playerId;
     }
+    let choosingPlayerIndex = gameStore.players.findIndex( playerEntry => playerEntry._id === data.payload.choosingPlayer );
+    if( choosingPlayerIndex !== -1 ){
+      gameStore.players[choosingPlayerIndex].isChoosing = true;
+    }
     router.push( { name: "gameWithGameId", params: { gameId: route.params.gameId } } );
   });
 
