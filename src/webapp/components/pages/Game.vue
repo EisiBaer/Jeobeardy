@@ -211,10 +211,6 @@ function playerBuzzered( data ){
   gameStore.acceptAnswers = false;
   if( gameStore.playerId === data.payload.playerId ){
     buzzBuzz.play();
-  } else {
-    if( !gameStore.isHost ){
-      buzzNoBuzz.play();
-    }
   }
   let playerIndex = gameStore.players.findIndex( playerEntry => playerEntry._id === data.payload.playerId );
   if( playerIndex !== -1 ){
@@ -401,10 +397,8 @@ onBeforeRouteLeave((to, from) => {
 });
 
 //TODO List:
-//  -Buzzer sound
 //  -Profile Pic
 //  -More Question Types
-//  -Players selecting BoardEntry
 
 </script>
 
