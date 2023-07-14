@@ -344,7 +344,7 @@ exports.handleMessage = ( gameSocketList, socket, dataRaw ) => {
               throw new Error("Player not found");
             } else {
               let message = `Player ${payload.playerName} got ${payload.pointsAdjustment} points`;
-              let sendingData = { players: game.players, acceptAnswers: game.acceptAnswers }
+              let sendingData = { adjustedPlayer: game.players[playerIndex], acceptAnswers: game.acceptAnswers }
               sendAllPlayers( socket, gameSocketList, "pointsAdjusted", message, sendingData );
               resolve();
             };

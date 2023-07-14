@@ -10,21 +10,21 @@ import { useGameStore } from '@/stores/GameStore';
 import Board from '@/models/Board';
 import BoardEntry from '@/models/BoardEntry';
 
-import BuzzerSound from "../../assets/sounds/buzzbuzz.mp3";
-import NoBuzzerSound from "../../assets/sounds/dingdongy.mp3";
-import CorrectAudio from "../../assets/sounds/correct.mp3";
-import WrongAudio from "../../assets/sounds/wrong.mp3";
+// import HardBuzzerSound from "../../assets/sounds/buzzbuzz.mp3";
+import BuzzerSound from "../../assets/sounds/dingdongy.mp3";
+// import CorrectAudio from "../../assets/sounds/correct.mp3";
+// import WrongAudio from "../../assets/sounds/wrong.mp3";
 
 const gameStore = useGameStore();
 const route = useRoute();
 let navbarHeight = ref(0);
 let boardIsLoading = ref( true );
 let buzzBuzz = new Audio( BuzzerSound );
-buzzBuzz.volume = 0.3
-let buzzNoBuzz = new Audio( NoBuzzerSound );
-buzzNoBuzz.volume = 0.7
-let answerCorrectAudio = new Audio( CorrectAudio );
-let answerWrongAudio = new Audio( WrongAudio );
+buzzBuzz.volume = 0.5
+// let buzzNoBuzz = new Audio( NoBuzzerSound );
+// buzzNoBuzz.volume = 0.7
+// let answerCorrectAudio = new Audio( CorrectAudio );
+// let answerWrongAudio = new Audio( WrongAudio );
 
 
 let protocol = ('https:' == document.location.protocol ? 'https://' : 'http://');
@@ -98,10 +98,9 @@ function setUpListeners(){
     boardSelected();
   });
   gameStore.addSocketListener("pointsAdjusted", ( data ) => {
-    gameStore.players = data.payload.players;
-    let self = data.payload.players.find( playerEntry => playerEntry._id === gameStore.playerId );
-    if( self ){
-      gameStore.acceptAnswers = data.payload.acceptAnswers && self.acceptAnswers;
+    gameStore.setPlayerPoints( data.payload.adjustedPlayer );
+    if( gameStore.playerId === data.payload.adjustedPlayer._id ){
+      gameStore.acceptAnswers = data.payload.acceptAnswers && data.payload.adjustedPlayer.acceptAnswers;
     } else {
       gameStore.acceptAnswers = data.payload.acceptAnswers;
     }

@@ -87,29 +87,6 @@ exports.checkPlayerAcceptAnswers = ( playerId ) => {
 }
 
 /**
- * Checks if a player is allowed to choose a BoardEntry
- * @param {String} playerId
- * @returns A promise which resolves with wheter the player is allowed to choose a BoardEntry or not. Rejects if an error occurs.
- */
-exports.checkPlayerCanChoose = ( playerId ) => {
-  return new Promise((resolve, reject) => {
-    PlayerModel.findById( playerId )
-    .then( ( player ) => {
-      if( player ){
-        resolve( player.isChoosing );
-      } else {
-        let playerNotFoundError = new Error(`No player found with id "${playerId}"`);
-        playerNotFoundError.name = "NotFoundError";
-        reject(playerNotFoundError);
-      }
-    })
-    .catch( ( err ) => {
-      reject( err );
-    })
-  });
-}
-
-/**
  * Checks if a player is allowed to currently answer a question and sets it to the specified value
  * @param {String} playerId
  * @returns A promise which resolves with wheter the player is allowed to answer or not. Rejects if an error occurs or host is not found.

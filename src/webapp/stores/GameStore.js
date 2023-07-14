@@ -28,6 +28,13 @@ export const useGameStore = defineStore('game', {
     }
   },
   actions: {
+    setPlayerPoints( adjustedPlayer ){
+      let playerToAdjustIndex = this.players.findIndex( playersEntry => playersEntry._id === adjustedPlayer._id );
+      if( playerToAdjustIndex !== -1 ){
+        this.players[playerToAdjustIndex].points = adjustedPlayer.points;
+        this.players[playerToAdjustIndex].isAnswering = false;
+      }
+    },
     setPlayerOnIndexChoosing( playerId ){
       let playerIndex = this.players.findIndex( playerEntry => playerEntry._id === playerId );
       for( let i in this.players ){
