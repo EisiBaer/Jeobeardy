@@ -91,6 +91,8 @@ function stopAudio(){
     <div v-show="props.isAnswerRevealed">
       <AnswerView
         :answer="boardEntry.answer"
+        :cIndex="props.cIndex"
+        :bEIndex="props.bEIndex"
       />
     </div>
 

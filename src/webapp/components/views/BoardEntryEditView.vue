@@ -92,8 +92,12 @@ watch(
 watch(
   () => props.boardEntryIndex,
   ( newVal, oldVal ) => {
-    answerImageInput.value.value = "";
-    questionImageInput.value.value = "";
+    if( answerImageInput.value ){
+      answerImageInput.value.value = "";
+    }
+    if( questionImageInput.value ){
+      questionImageInput.value.value = "";
+    }
   }
 );
 

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch, nextTick } from "vue";
 
 import { useGameCreationStore } from "@/stores/GameCreationStore";
 import { useRoute } from "vue-router";
@@ -34,7 +34,18 @@ onMounted( () => {
   if( imageRef.value ){
     imageRef.value.src = API_URL + '/game/file/' + props.answer.filename;
   }
-})
+});
+
+watch(
+  () => props.bEIndex,
+  ( _newVal, _oldVal ) => {
+    nextTick( () => {
+        if( imageRef.value ){
+            imageRef.value.src = API_URL + '/game/file/' + props.answer.filename;
+        }
+    });
+  }
+)
 
 </script>
 
