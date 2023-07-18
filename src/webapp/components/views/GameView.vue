@@ -9,6 +9,7 @@ const props = defineProps({
   board: Object,
   cIndex: Number,
   bEIndex: Number,
+  questionIndex: Number,
   showingBottomView: Boolean,
   isHost: {
     type: Boolean,
@@ -135,6 +136,7 @@ watch(
         <BoardEntryView
           :cIndex="props.cIndex"
           :bEIndex="props.bEIndex"
+          :questionIndex="props.questionIndex"
           :board="props.board"
           :isHost="props.isHost"
           :isQuestionRevealed="props.isQuestionRevealed"

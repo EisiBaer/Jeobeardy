@@ -161,7 +161,7 @@ exports.handleMessage = ( gameSocketList, socket, dataRaw ) => {
         break;
       case "selectBoardEntry":
         if( socket.locals.isHost ){
-          let message = `BoardEntry ${payload.boardEntryIndex} selected`;
+          let message = `BoardEntry ${payload.boardEntryIndex} selected in Category ${payload.categoryIndex}`;
           let sendingData = { categoryIndex: payload.categoryIndex, boardEntryIndex: payload.boardEntryIndex };
           sendAllPlayers( socket, gameSocketList, "boardEntrySelected", message, sendingData );
           resolve();

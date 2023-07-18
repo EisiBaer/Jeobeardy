@@ -8,6 +8,7 @@ const props = defineProps({
   board: Object,
   cIndex: Number,
   bEIndex: Number,
+  questionIndex: Number,
   isHost: {
     type: Boolean,
     default: false,
@@ -16,7 +17,6 @@ const props = defineProps({
 
 let emit = defineEmits(["specificQuestionLayerSelected", "playAudio", "stopAudio"])
 
-let selectedIndex = ref(0);
 const imageRef = ref([]);
 let route = useRoute();
 let gameCreationStore = useGameCreationStore();
@@ -31,21 +31,15 @@ const API_URL = `${protocol}${hostname}/api`;
 
 
 let getImageInGameCreationStore = computed( () => {
-  return gameCreationStore.images.find( imageEntry => imageEntry.cIndex === props.cIndex && imageEntry.bEIndex === props.bEIndex && imageEntry.qIndex === selectedIndex.value );
+  return gameCreationStore.images.find( imageEntry => imageEntry.cIndex === props.cIndex && imageEntry.bEIndex === props.bEIndex && imageEntry.qIndex === props.questionIndex );
 })
 
 function specificLayerSelected( index ){
-  selectedIndex.value = index;
-  nextTick( () => {
-    if( imageRef.value[0] ){
-      imageRef.value[0].src = API_URL + '/game/file/' + props.questions[selectedIndex.value].filename;
-    }
-  });
   emit("specificQuestionLayerSelected", index );
 }
 
 function playAudio(){
-  emit("playAudio", props.cIndex, props.bEIndex, selectedIndex.value );
+  emit("playAudio", props.cIndex, props.bEIndex, props.questionIndex );
 }
 
 
@@ -56,17 +50,16 @@ function stopAudio(){
 
 onMounted( () => {
   if( imageRef.value[0] ){
-    imageRef.value[0].src = API_URL + '/game/file/' + props.questions[selectedIndex.value].filename;
+    imageRef.value[0].src = API_URL + '/game/file/' + props.questions[props.questionIndex].filename;
   }
-})
+});
 
 watch(
-  () => props.bEIndex,
+  () => props.questionIndex,
   ( _newVal, _oldVal ) => {
-    selectedIndex.value = 0;
     nextTick( () => {
       if( imageRef.value[0] ){
-        imageRef.value[0].src = API_URL + '/game/file/' + props.questions[selectedIndex.value].filename;
+        imageRef.value[0].src = API_URL + '/game/file/' + props.questions[props.questionIndex].filename;
       }
     });
   }
@@ -76,7 +69,7 @@ watch(
 
 <template>
   <template v-for="(question, questionIndex) in props.questions" :key="questionIndex">
-    <div v-if="selectedIndex === questionIndex" class="d-flex flex-column justify-content-center align-items-center h-100 w-100">
+    <div v-if="props.questionIndex === questionIndex" class="d-flex flex-column justify-content-center align-items-center h-100 w-100">
       <h1 class="text-center" :class="[{ 'white-space-show-nl': question.questionType === 'multilineQuestion'}]">
         {{ question.questionText }}
       </h1>
@@ -105,7 +98,7 @@ watch(
     <div v-if="props.questions.length > 1 && props.isHost" class="d-flex justify-content-start align-items-center position-absolute bottom-0 start-0 ms-3 mb-3">
       <template v-for="(question, questionIndex) in props.questions" :key="questionIndex">
         <div>
-          <button class="btn btn-sm m-1 py-1" :class="[{'btn-pink-accent-primary': selectedIndex === questionIndex }, {'btn-outline-pink-accent-primary': selectedIndex !== questionIndex }]" :disabled="selectedIndex === questionIndex" @click="specificLayerSelected( questionIndex )">
+          <button class="btn btn-sm m-1 py-1" :class="[{'btn-pink-accent-primary': props.questionIndex === Number(questionIndex) }, {'btn-outline-pink-accent-primary': props.questionIndex !== questionIndex }]" :disabled="props.questionIndex === questionIndex" @click="specificLayerSelected( questionIndex )">
             {{ questionIndex + 1 }}
           </button>
         </div>

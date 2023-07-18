@@ -9,6 +9,7 @@ const props = defineProps({
   categoryName: String,
   cIndex: Number,
   bEIndex: Number,
+  questionIndex: Number,
   isHost: {
     type: Boolean,
     default: false,
@@ -80,6 +81,7 @@ function stopAudio(){
       <QuestionView
       :cIndex="props.cIndex"
       :bEIndex="props.bEIndex"
+      :questionIndex="props.questionIndex"
       :questions="boardEntry.questions"
       :board="props.board"
       :isHost="props.isHost"

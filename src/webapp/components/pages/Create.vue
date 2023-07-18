@@ -245,6 +245,7 @@ if( route.params.boardId !== undefined ){
               :board="gameCreationStore.board"
               :cIndex="categoryIndex"
               :bEIndex="boardEntryIndex"
+              :questionIndex="questionIndex"
               :isQuestionRevealed="showingQuestion"
               :isAnswerRevealed="showingAnswer"
               :showingBottomView="showingBottomView"

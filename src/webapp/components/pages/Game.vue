@@ -39,7 +39,7 @@ const API_URL = `${protocol}${hostname}/api`;
 let categoryIndex = ref( -1 );
 let boardEntryIndex = ref( -1 );
 let selectedObject = ref( null );
-let questionIndexForAudio = ref(0);
+let questionIndex = ref(0);
 let audioInstance = ref(null);
 let showingAnswer = ref( false );
 let showingQuestion = ref( false );
@@ -77,6 +77,7 @@ function boardSelected(){
 function selectBoardEntryWithCategory( cIndex, entryIndex ){
   categoryIndex.value = cIndex;
   boardEntryIndex.value = entryIndex;
+  questionIndex.value = 0;
   selectedObject.value = gameStore.board.categories[cIndex].boardEntries[entryIndex];
 }
 
@@ -116,7 +117,7 @@ function setUpListeners(){
   });
   gameStore.addSocketListener("audioPlaying", ( _data ) => {
     if( !audioInstance.value ){
-      let audioUrl = API_URL + '/game/file/' + gameStore.board.categories[categoryIndex.value].boardEntries[boardEntryIndex.value].questions[questionIndexForAudio.value].filename;
+      let audioUrl = API_URL + '/game/file/' + gameStore.board.categories[categoryIndex.value].boardEntries[boardEntryIndex.value].questions[questionIndex.value].filename;
       audioInstance.value = new Audio( audioUrl );
       audioInstance.value.onended = (_event) => {
         audioInstance.value = null;
@@ -205,6 +206,9 @@ function setUpListeners(){
   gameStore.addSocketListener("playerCanChoose", ( data ) => {
     gameStore.setPlayerOnIndexChoosing( data.payload.choosingPlayer );
   });
+  gameStore.addSocketListener("questionLayerSelected", ( data ) => {
+    questionIndex.value = Number( data.payload.questionIndex );
+  });
 }
 
 function playerBuzzered( data ){
@@ -249,6 +253,10 @@ function boardEntryClicked( cIndex, entryIndex ){
   }
 }
 
+function specificQuestionLayerSelected( qIndex ){
+  gameStore.sendEvent("selectQuestionLayer", { questionIndex: qIndex });
+}
+
 function buzzerPressed(){
   if( gameStore.acceptAnswers ){
     gameStore.sendEvent( "pressBuzzer", {} );
@@ -262,7 +270,7 @@ function answerTextUpdated( updatedText ){
 }
 
 function playAudio( _cIndex, _bEIndex, qIndex ){
-  questionIndexForAudio.value = Number(qIndex);
+  questionIndex.value = Number(qIndex);
   gameStore.sendEvent("playAudioForQuestion", {} );
 }
 
@@ -418,6 +426,7 @@ onBeforeRouteLeave((to, from) => {
               :board="gameStore.board"
               :cIndex="categoryIndex"
               :bEIndex="boardEntryIndex"
+              :questionIndex="questionIndex"
               :showingBottomView="true"
               :isHost="gameStore.isHost"
               :isPlayerChoosing="gameStore.isPlayerChoosing"
@@ -435,6 +444,7 @@ onBeforeRouteLeave((to, from) => {
               @stopAudio="stopAudio"
               @questionAnswered="questionAnswered"
               @questionAnsweredRevert="questionAnsweredRevert"
+              @specificQuestionLayerSelected="specificQuestionLayerSelected"
             />
           </div>
         </div>

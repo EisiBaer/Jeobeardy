@@ -271,6 +271,8 @@ export const useGameStore = defineStore('game', {
       this.players = [];
       this.board = new Board( undefined, "New Board", []);
       this.acceptAnswers =  false;
+      this.isPlayerChoosing = false;
+      this.chosenEntry = undefined;
     },
     closeWebSocket(){
       this.websocketConnection.close();
@@ -310,6 +312,9 @@ export const useGameStore = defineStore('game', {
         if( data.payload !== undefined ){
           this.players = data.payload.players;
         }
+      });
+      this.addSocketListener("payloadIncomplete", ( data ) => {
+        console.error("Invalid or Incomplete Payload!");
       });
     }
   },
