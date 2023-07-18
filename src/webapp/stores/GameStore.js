@@ -69,7 +69,7 @@ export const useGameStore = defineStore('game', {
           }
         })
         .catch( ( err ) => {
-          console.debug(err);
+          console.err(err);
           reject("An Error occured while joining this game! You will be forwarded to the main page");
         })
       });
@@ -227,7 +227,6 @@ export const useGameStore = defineStore('game', {
         }
 
         this.websocketConnection.onmessage = ( message ) => {
-          console.debug("Got Message!", message);
           let dataRaw = message.data;
           if( dataRaw === undefined || typeof dataRaw !== "string" ){
             console.error("Data not parseable")
@@ -238,7 +237,6 @@ export const useGameStore = defineStore('game', {
           this.socketListeners.forEach( x => {
             if( data.event === x.event){
               x.callback(data);
-              console.debug( x.event + " callback called");
             }
           });
         };
