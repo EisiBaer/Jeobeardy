@@ -25,6 +25,7 @@ export const useGameStore = defineStore('game', {
       acceptAnswers: false,
       isPlayerChoosing: false,
       chosenEntry: undefined,
+      keepAliveInterval: undefined,
     }
   },
   actions: {
@@ -222,7 +223,10 @@ export const useGameStore = defineStore('game', {
         }, 5000);
 
         this.websocketConnection.onopen = ( _event ) => {
-          clearTimeout(timeout);
+          this.keepAliveInterval = setInterval( () => {
+            this.sendEvent("keepAlive", {} );
+          }, 55000);
+	  clearTimeout(timeout);
           resolve();
         }
 
@@ -244,7 +248,9 @@ export const useGameStore = defineStore('game', {
           console.error("Websocket Error");
         };
         this.websocketConnection.onclose = ( event ) => {
-          const userStore = useUserStore();
+          clearInterval( this.keepAliveInterval );
+          this.keepAliveInterval = undefined;
+	  const userStore = useUserStore();
           userStore.resetInitialUserDataPromise();
           userStore.initialUserPromise
           .then( ( userData ) => {
