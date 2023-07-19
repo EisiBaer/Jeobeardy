@@ -240,6 +240,7 @@ function removeListeners(){
   gameStore.removeSocketListener("questionAnswered");
   gameStore.removeSocketListener("questionNotAnswered");
   gameStore.removeSocketListener("playerLeft");
+  gameStore.removeSocketListener("questionLayerSelected");
 }
 
 function showBoard(){
