@@ -185,3 +185,7 @@ $utilities: map-merge(
 .buzzer-answering:active{
   background-color: shade-color( $green-active, 10% );
 }
+
+.image-contain{
+  object-fit: contain;
+}

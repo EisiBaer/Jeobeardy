@@ -76,12 +76,12 @@ watch(
       <template v-if="question.questionType === 'imageQuestion'">
         <template v-if="route.path.includes('create') && getImageInGameCreationStore !== undefined">
           <div class="h-75 w-100 text-center">
-            <img class="h-100" :src="getImageInGameCreationStore.url"  />
+            <img class="image-contain h-100 w-100" :src="getImageInGameCreationStore.url" loading="eager" />
           </div>
         </template>
         <template v-else-if="question.filename">
           <div class="h-75 w-100 text-center">
-            <img ref="imageRef" class="h-100" src=""  />
+            <img ref="imageRef" class="image-contain h-100 w-100" src="" loading="eager" />
           </div>
         </template>
       </template>

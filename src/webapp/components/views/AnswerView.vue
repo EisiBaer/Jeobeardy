@@ -54,12 +54,12 @@ watch(
         <div class="d-flex justify-content-center align-items-center position-absolute bottom-0 start-0 h-100 w-100 bg-dark-primary">
             <template v-if="route.path.includes('create') && getImageInGameCreationStore !== undefined">
                 <div class="h-75 w-100 text-center">
-                    <img class="h-100" :src="getImageInGameCreationStore.url"  />
+                    <img class="image-contain h-100 w-100" :src="getImageInGameCreationStore.url" loading="eager" />
                 </div>
             </template>
             <template v-else-if="answer.filename">
                 <div class="h-75 w-100 text-center">
-                    <img ref="imageRef" class="h-100" src=""  />
+                    <img ref="imageRef" class="image-contain h-100 w-100" src="" loading="eager" />
                 </div>
             </template>
             <div class="d-flex justify-content-center align-items-center position-absolute bottom-0 start-50 translate-middle mt-5">
@@ -77,6 +77,3 @@ watch(
         </div>
     </template>
 </template>
-
-<style scoped>
-</style>
