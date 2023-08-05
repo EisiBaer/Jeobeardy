@@ -64,11 +64,6 @@ const anyPlayerIsAnswering = computed( () => {
   return gameStore.players.findIndex( playerEntry => playerEntry.isAnswering ) !== -1;
 });
 
-const isBeingPlayed = computed( () => {
-  return route.path.includes("game");
-});
-
-
 function boardSelected(){
   selectedObject.value = gameStore.board;
   categoryIndex.value = -1;
@@ -433,7 +428,7 @@ onBeforeRouteLeave((to, from) => {
               :isHost="gameStore.isHost"
               :isPlayerChoosing="gameStore.isPlayerChoosing"
               :anyPlayerIsAnswering="anyPlayerIsAnswering"
-              :isBeingPlayed="isBeingPlayed"
+              :isBeingPlayed="true"
               :chosenEntry="gameStore.chosenEntry"
               @showBoard="showBoard"
               @showQuestion="showQuestion"

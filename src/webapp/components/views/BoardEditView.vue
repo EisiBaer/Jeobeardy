@@ -1,16 +1,11 @@
 <script setup>
 import { ref } from "vue";
-import Draggable from "vue3-draggable";
-import { onMounted } from "vue";
 
 import { useGameCreationStore } from '@/stores/GameCreationStore';
-import CustomTextSaveOrCancel from '@/components/blocks/CustomTextSaveOrCancel.vue';
 import Category from "@/models/Category";
 
 
 const gameCreationStore = useGameCreationStore();
-let buttonDivHeight = ref("3rem");
-let navbarHeight = ref("4rem");
 
 let newCategoryName = ref("");
 
@@ -23,7 +18,20 @@ function addCategoryButtonClicked(_event){
     state.board.categories.push( category );
   })
   newCategoryName.value = "";
-  // gameCreationStore.board.categories.push( category );
+}
+function moveUpButtonClicked( pressedIndex ){
+  gameCreationStore.$patch((state)=>{
+    let tmpCat = state.board.categories[pressedIndex];
+    state.board.categories[pressedIndex] = state.board.categories[pressedIndex - 1];
+    state.board.categories[pressedIndex - 1] = tmpCat;
+  })
+}
+function moveDownButtonClicked( pressedIndex ){
+  gameCreationStore.$patch((state)=>{
+    let tmpCat = state.board.categories[pressedIndex];
+    state.board.categories[pressedIndex] = state.board.categories[pressedIndex + 1];
+    state.board.categories[pressedIndex + 1] = tmpCat;
+  })
 }
 function deleteCategoryButtonClicked( cIndex ){
   gameCreationStore.$patch((state)=>{
@@ -31,16 +39,11 @@ function deleteCategoryButtonClicked( cIndex ){
   })
 }
 
-onMounted( () => {
-  buttonDivHeight.value = document.getElementById("save-cancel-button-div").offsetHeight;
-  navbarHeight.value = document.getElementById("board-entry-edit-view-container").offsetHeight;
-});
-
 </script>
 
 <template>
   <div id="board-entry-edit-view-container" class="container-fluid h-100 px-0">
-    <div class="d-flex flex-column px-3" :style="[{'height': 'calc( 100vh - ' + (navbarHeight - buttonDivHeight) + 'px)' }]">
+    <div class="d-flex flex-column px-3">
       <div class="my-3">
         <h3 class="border-bottom border-3 border-pink-accent-primary fw-bold">Board</h3>
         <div>
@@ -53,7 +56,13 @@ onMounted( () => {
           <template v-else>
             <div v-for="( category, categoryListIndex ) in gameCreationStore.board.categories" :key="category.categoryName">
               <div class="input-group mb-1">
-                <span class="form-control border-pink-accent-primary">{{ category.categoryName }}</span>
+                <button tabindex="-1" class="btn btn-pink-accent-primary" @click="moveUpButtonClicked(categoryListIndex)" :disabled="categoryListIndex === 0">
+                  <font-awesome-icon icon="fa-solid fa-angle-up" />
+                </button>
+                <button tabindex="-1" class="btn btn-pink-accent-primary" @click="moveDownButtonClicked(categoryListIndex)" :disabled="categoryListIndex === gameCreationStore.board.categories.length-1">
+                  <font-awesome-icon icon="fa-solid fa-angle-down" />
+                </button>
+                <span class="form-control border-pink-accent-primary text-truncate">{{ category.categoryName }}</span>
                 <button tabindex="-1" class="btn btn-pink-accent-primary" @click="deleteCategoryButtonClicked(categoryListIndex)">
                   <font-awesome-icon icon="fa-solid fa-trash" />
                 </button>

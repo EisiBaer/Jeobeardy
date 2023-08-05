@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, computed, nextTick } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Modal } from "bootstrap";
 
@@ -250,6 +250,7 @@ if( route.params.boardId !== undefined ){
               :isAnswerRevealed="showingAnswer"
               :showingBottomView="showingBottomView"
               :isHost="true"
+              :isBeingPlayed="false"
               @showBoard="boardSelected"
               @showQuestion="showQuestion"
               @showAnswer="showAnswer"
@@ -300,8 +301,8 @@ if( route.params.boardId !== undefined ){
           </div>
         </div>
         <div class="col-3 border-start border-2 border-pink-accent-primary px-0 h-100">
-          <div class="d-flex flex-column w-100 justify-content-between h-100">
-            <div class="overflow-auto">
+          <div class="d-flex flex-column w-100 h-100">
+            <div class="overflow-auto flex-grow-1">
               <component :is="getEditComponent" v-bind="getPropsForSelectedObjectEditView" @questionIndexChanged="specificQuestionLayerSelected"/>
             </div>
             <div id="save-cancel-button-div" class="w-100 border-top border-pink-accent-primary">

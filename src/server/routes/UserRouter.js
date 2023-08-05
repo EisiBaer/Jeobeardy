@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+const fs = require("node:fs/promises");
+const { v4: uuidv4 } = require("uuid");
 
 const userController = require("../controllers/UserControllerMongoose");
 const boardController = require("../controllers/BoardControllerMongoose");
-const multer = require('multer');
-const fs = require("node:fs/promises");
 
 // Initialize Multer File Uplaod
 const storage = multer.diskStorage({
@@ -23,13 +24,7 @@ const storage = multer.diskStorage({
             fileExtension = '.mp3';
         }
 
-        let board = JSON.parse( req.body.board );
-        let indices = file.originalname.split(":");
-        let filename = board.boardId + '_' +
-            indices[0] + '_' +
-            indices[1] + '_' +
-            indices[2] +
-            fileExtension;
+        let filename = uuidv4() + fileExtension;
 
         fs.access( "public/uploads/" + filename, fs.constants.F_OK )
         .then( ( ) =>{
