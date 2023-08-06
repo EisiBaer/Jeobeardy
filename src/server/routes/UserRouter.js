@@ -72,24 +72,6 @@ const fileFilterFn = function( req, file, cb ){
                 return;
             }
         
-            let indices = file.originalname.split(":");
-            if( indices.length !== 3 ){
-                cb( new Error( "Image index not found" ) );
-                return;
-            }
-            if(
-
-                board.categories[indices[0]] === undefined ||
-                board.categories[indices[0]].boardEntries[indices[1]] === undefined ||
-                ( 
-                    board.categories[indices[0]].boardEntries[indices[1]].questions[indices[2]] === undefined &&
-                    indices[2] !== 'answer'
-                )
-            ){
-                cb( new Error( "No entry found for image" ) );
-                return;
-            }
-
             cb( null, true );
         }
     });
@@ -250,6 +232,27 @@ router.get("/boards/:id", (req, res) => {
         })
         .then( ( board ) => {
             res.send( { success: true, board: board } );
+        })
+        .catch( ( err ) => {
+            res.send( { success: false, error: err } );
+        });
+    }
+});
+
+
+router.post("/pfp", upload.single( "pfp" ), (req, res) => {
+    if( req.session.user === undefined ){
+        res.send( { success: false, error: "Not logged in!" } );
+    } else {
+        let imageFile = null;
+        if( !req.file ){
+            console.error( "No file attached" );
+            return;
+        }
+        imageFile = req.file;
+        return userController.updateProfilePicture( req.session.user, imageFile.filename )
+        .then( ( user ) => {
+            res.send( { success: true, newProfilePicture: user.profilePicture } );
         })
         .catch( ( err ) => {
             res.send( { success: false, error: err } );

@@ -1,9 +1,11 @@
 <script setup>
+import { useRouter } from 'vue-router';
 
 import BoardListView from '@/components/views/BoardListView.vue';
+import UserCustomizationView from '@/components/views/UserCustomizationView.vue';
 import { useUserStore } from "@/stores/UserStore";
 import { useLoginCheck } from "@/composables/loginCheck";
-import { useRouter } from 'vue-router';
+
 
 useLoginCheck();
 
@@ -37,6 +39,11 @@ function boardSelected( boardId ){
           New Board
           <font-awesome-icon icon="fa-solid fa-plus-square" />
         </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <UserCustomizationView />
       </div>
     </div>
   </div>
