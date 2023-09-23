@@ -87,6 +87,8 @@ $modal-content-bg: $dark-blue;
 
 $font-family-base: "Urbanist";
 
+$enable-caret: false;
+
 
 
 // 2. Include any default variable overrides here
@@ -188,4 +190,8 @@ $utilities: map-merge(
 
 .image-contain{
   object-fit: contain;
+}
+
+.pfp{
+  object-fit: cover;
 }

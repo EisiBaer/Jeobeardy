@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', {
       loggedIn: false,
       username: "",
       admin: false,
+      pfpFilename: null,
       initialUserPromise: new Promise( (resolve, reject ) => {
         uService.getUserFromSession()
         .then( res => {
@@ -43,6 +44,7 @@ export const useUserStore = defineStore('user', {
     setUser( user ){
       this.loggedIn = true;
       this.username = user.username;
+      this.pfpFilename = user.pfpFilename;
     },
     resetInitialUserDataPromise(){
       this.initialUserPromise = new Promise( (resolve, reject ) => {
@@ -59,6 +61,39 @@ export const useUserStore = defineStore('user', {
           reject( err );
         });
       });
-    }
+    },
+    saveProfilePicture( imageData ){
+      return new Promise( ( resolve, reject ) => {
+        let formData = new FormData();
+        formData.append( "pfp", imageData );
+        this.userService.saveNewProfilePicture( formData )
+        .then( ( response ) => {
+          this.pfpFilename = response.data.newProfilePicture;
+          resolve();
+        })
+        .catch( ( error ) => {
+          console.error( error );
+          reject();
+        });
+      });
+    },
+    deleteProfilePicture(){
+      return new Promise( ( resolve, reject ) => {
+        this.userService.deleteProfilePicture()
+        .then( ( response ) => {
+          if( response.data.success ){
+            this.pfpFilename = null;
+            resolve();
+          } else {
+            console.warn( "Profile picture could not be deleted" );
+            reject();
+          }
+        })
+        .catch( ( error ) => {
+          console.error( error );
+          reject();
+        });
+      });
+    },
   },
 })

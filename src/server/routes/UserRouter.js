@@ -60,21 +60,26 @@ const fileFilterFn = function( req, file, cb ){
         return;
     }
 
-    let board = JSON.parse( req.body.board );
+    if( req.body.board ){
 
-    boardController.isBoardFromUser( board.boardId, req.session.user )
-    .then( ( isFromUser ) => {
-        if( !isFromUser && board.boardId !== undefined ){
-            cb( new Error( "The associated board is not the users" ) );
-        } else {
-            if( req.session.user === undefined ){
-                cb( new Error( "Only logged in Users can upload pictures" ) );
-                return;
+        let board = JSON.parse( req.body.board );
+
+        boardController.isBoardFromUser( board.boardId, req.session.user )
+        .then( ( isFromUser ) => {
+            if( !isFromUser && board.boardId !== undefined ){
+                cb( new Error( "The associated board is not the users" ) );
+            } else {
+                if( req.session.user === undefined ){
+                    cb( new Error( "Only logged in Users can upload pictures" ) );
+                    return;
+                }
+            
+                cb( null, true );
             }
-        
-            cb( null, true );
-        }
-    });
+        });
+    } else {
+        cb( null, true );
+    }
 
 }
 
@@ -84,7 +89,7 @@ router.get("/", (req, res)=>{
     if( req.session.user !== undefined ){
         userController.findUser( req.session.user )
         .then( user => {
-            res.send({success: true, user: { username: user.username } } );
+            res.send({success: true, user: { username: user.username, pfpFilename: user.pfpFilename } } );
         })
         .catch( err => {
             console.debug(err);
@@ -124,6 +129,7 @@ router.post("/login", (req, res)=>{
             res.send({success: true, user: { username: req.session.user } } );
         })
         .catch( ( err ) => {
+            console.error( err );
             res.send({success:false, error: "Error with logging you in" });
         })
     }else{
@@ -240,19 +246,45 @@ router.get("/boards/:id", (req, res) => {
 });
 
 
+router.get("/pfp/:filename", (req, res) => {
+    console.log("Getting pfp: ", req.params.filename);
+    let options = {
+      root: 'public/uploads',
+      dotfiles: 'deny',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      }
+    }
+    res.sendFile( req.params.filename, options );
+  });
+
+
 router.post("/pfp", upload.single( "pfp" ), (req, res) => {
     if( req.session.user === undefined ){
         res.send( { success: false, error: "Not logged in!" } );
     } else {
-        let imageFile = null;
         if( !req.file ){
             console.error( "No file attached" );
-            return;
+            throw new Error("No file attached to be saved" );
         }
-        imageFile = req.file;
+        let imageFile = req.file;
         return userController.updateProfilePicture( req.session.user, imageFile.filename )
         .then( ( user ) => {
-            res.send( { success: true, newProfilePicture: user.profilePicture } );
+            res.send( { success: true, newProfilePicture: user.pfpFilename } );
+        })
+        .catch( ( err ) => {
+            res.send( { success: false, error: err } );
+        });
+    }
+});
+
+router.delete("/pfp", (req, res) => {
+    if( req.session.user === undefined ){
+        res.send( { success: false, error: "Not logged in!" } );
+    } else {
+        return userController.updateProfilePicture( req.session.user, null )
+        .then( ( _user ) => {
+            res.send( { success: true, } );
         })
         .catch( ( err ) => {
             res.send( { success: false, error: err } );

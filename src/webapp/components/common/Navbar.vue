@@ -1,5 +1,6 @@
 <script setup>
 import { useUserStore } from '@/stores/UserStore';
+import ProfilePicture from '@/components/blocks/ProfilePicture.vue';
 
 const userStore = useUserStore();
 
@@ -67,7 +68,13 @@ function logoutButtonClicked(_event){
                 <div v-if="userStore.loggedIn">
                   <div class="dropdown text-center">
                     <a class="dropdown-toggle text-decoration-none" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      {{ userStore.username }}
+                      <div class="d-flex align-items-center justify-content-around">
+                        <font-awesome-icon icon="fa-solid fa-angle-down" size="sm" class="me-2"/>
+                        <span class="me-1">{{ userStore.username }}</span>
+                        <ProfilePicture
+                          :sizingClasses="['pfp-sizing-navbar']"
+                        />
+                      </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark bg-dark-blue">
                       <li>
@@ -96,7 +103,13 @@ function logoutButtonClicked(_event){
             <div v-if="userStore.loggedIn">
               <div class="dropdown">
                 <a class="dropdown-toggle text-decoration-none" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{ userStore.username }}
+                  <div class="d-flex align-items-center justify-content-around">
+				            <font-awesome-icon icon="fa-solid fa-angle-down" size="sm" class="me-2"/>
+                    <span class="me-1">{{ userStore.username }}</span>
+                    <ProfilePicture
+                      :sizingClasses="['pfp-sizing-navbar']"
+                    />
+                  </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark bg-dark-blue">
                   <li>
@@ -126,5 +139,9 @@ function logoutButtonClicked(_event){
 <style scoped>
 .nav-logo{
   height: 3.75em;
+}
+.pfp-sizing-navbar{
+  height: 2em;
+  width: 2em;
 }
 </style>

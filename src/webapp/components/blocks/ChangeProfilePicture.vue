@@ -1,11 +1,17 @@
 <script setup>
 import { ref } from 'vue';
 
+import { useUserStore } from "@/stores/UserStore";
+import GenericMultiButtonModal from '@/components/views/GenericMultiButtonModal.vue';
+import { openModal } from "@/services/util";
+import ProfilePicture from '@/components/blocks/ProfilePicture.vue';
 
-const emit = defineEmits(["profilePictureChanged"]);
 
-let uploadedFileUrl = ref(null);
+let uploadedFileObj = ref(null);
+let uploadingInProcess = ref(false);
+let imageInput = ref(null);
 
+const userStore = useUserStore();
 
 function newImageUploaded( event ){
     let files = event.target.files || event.dataTransfer.files;
@@ -16,14 +22,43 @@ function newImageUploaded( event ){
         data: files[0],
         url: URL.createObjectURL( files[0] ),
     };
-    uploadedFileUrl.value = fileObj;
+    uploadedFileObj.value = fileObj;
 }
 
-function revealAnswer(){
-    emit("profilePictureChanged");
+function saveProfilePicture(){
+    if( uploadedFileObj.value === null || uploadingInProcess.value === true ){
+        return;
+    }
+    uploadingInProcess.value = true;
+    userStore.saveProfilePicture( uploadedFileObj.value.data )
+    .finally( () => {
+        uploadingInProcess.value = false;
+        resetUploadedFileObj();
+    })
 }
 
-revealAnswer();
+function deleteProfilePicture(){
+    openModal('confirmDeletePfpModal');
+}
+
+function resetUploadedFileObj(){
+    uploadedFileObj.value = null;
+    imageInput.value.value = null;
+}
+
+function handleModalButtonClick( buttonIndex ){
+  switch( buttonIndex ){
+    case 0:
+        userStore.deleteProfilePicture()
+        .finally( () => {
+            uploadedFileObj.value = null;
+        })
+      break;
+    case 1:
+    default:
+      return;
+  }
+}
 
 </script>
 
@@ -36,23 +71,51 @@ revealAnswer();
         </div>
     </div>
     <div class="row">
-        <div class="col-2">
-            <div class="ratio ratio-16x9">
-                <img src="" alt="Current Profile Picture">
-            </div>
+        <div class="col-auto">
+            <ProfilePicture
+                :srcOverride="(uploadedFileObj !== null ? uploadedFileObj.url : null )"
+                :isPreview="uploadedFileObj !== null"
+                @previewDiscarded="resetUploadedFileObj()"
+            />
         </div>
-        <div class="col">
-            <div class="row">
-                <div class="col">
-                    <img src="" alt="Standard Profile Picture">
+        <div class="col-auto border-start">
+            <div class="h-100 d-flex flex-column justify-content-evenly">
+                <div>
+                    <label class="form-label fs-5" for="question-image">Upload new profile picture</label>
+                    <input ref="imageInput" class="form-control bg-dark-blue" type="file" name="question-image" id="question-image" @change="newImageUploaded" accept="image/*">
                 </div>
-            </div>
-            <div>
-                <label class="form-label fs-4 mt-3" for="question-image">Upload new profile picture</label>
-                <input class="form-control bg-dark-blue" type="file" name="question-image" id="question-image" @change="newImageUploaded( questionIndex, $event )" accept="image/*">
+                <div>
+                    <button class="btn btn-pink-accent-primary me-3" :disabled="uploadedFileObj === null" @click="saveProfilePicture">
+				        <font-awesome-icon v-if="uploadingInProcess" icon="fa-solid fa-spinner" spin/>
+				        <font-awesome-icon v-else icon="fa-solid fa-floppy-disk" />
+                        Save
+                    </button>
+                    <button class="btn btn-danger" :disabled="userStore.pfpFilename === null" @click="deleteProfilePicture">
+                        <font-awesome-icon icon="fa-solid fa-floppy-disk" />
+                        Delete Current Profile Picture
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</template>
 
-<style scoped></style>
+    <GenericMultiButtonModal
+      :id="'confirmDeletePfpModal'"
+      :hasTitle="true"
+      :title="'Are you sure?'"
+      :modalText="'Are you sure you want to delete your current profile picture?'"
+      :buttonList="[
+        {
+					text: 'Yes, delete!',
+					emitsEvent: 'discardClicked',
+					bgColorClass: 'btn-danger',
+				},
+				{
+					text: 'Cancel',
+					bgColorClass: 'btn-pink-accent-primary',
+				},
+      ]"
+      @buttonClicked="handleModalButtonClick"
+    />
+
+</template>

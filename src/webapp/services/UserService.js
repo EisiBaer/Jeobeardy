@@ -88,7 +88,7 @@ export default class UserService{
             }
         );
     }
-    
+
     getBoardFromUser( boardId ){
         return axios.get(
             API_URL + "/user/boards/" + boardId,
@@ -101,4 +101,22 @@ export default class UserService{
         );
     }
 
+    saveNewProfilePicture( pfpFormData ){
+        return axios.post(
+            API_URL + "/user/pfp",
+            pfpFormData,
+            {
+                withCredentials: true,
+            }
+        );
+    }
+
+    deleteProfilePicture( ){
+        return axios.delete(
+            API_URL + "/user/pfp",
+            {
+                withCredentials: true,
+            }
+        );
+    }
 }

@@ -1,4 +1,3 @@
-const GameModel = require("../models/GameModel");
 const PlayerModel = require("../models/PlayerModel");
 
 /**

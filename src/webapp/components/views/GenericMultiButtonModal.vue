@@ -20,12 +20,10 @@ const props = defineProps({
 			return [
 				{
 					text: "Ok",
-					emitsEvent: "b1Clicked",
 					bgColorClass: "btn-pink-accent-primary",
 				},
 				{
 					text: "Cancel",
-					emitsEvent: "b2Clicked",
 					bgColorClass: "btn-outline-danger",
 				},
 			];

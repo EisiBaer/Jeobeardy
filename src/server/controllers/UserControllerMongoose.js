@@ -1,9 +1,10 @@
 const bcrypt = require("bcryptjs");
+const fs = require("node:fs/promises");
 
 const UserModel = require("../models/UserModel");
 const BoardModel = require("../models/BoardModel");
 
-exports.listUsers = (req, res) => {
+exports.listUsers = () => {
   return new Promise((resolve, reject) => {
     UserModel.find({}, "-password")
       .then((users) => {
@@ -135,6 +136,33 @@ exports.addBoardToUser = ( board ) => {
         } else {
           resolve( board );
         }
+      })
+      .catch( ( err ) => {
+        reject( err );
+      })
+  });
+};
+
+exports.updateProfilePicture = ( userId, pfpFilename ) => {
+  return new Promise( ( resolve, reject ) => {
+    UserModel.findByIdAndUpdate( userId, { pfpFilename: pfpFilename } )
+      .then( ( userBefore ) => {
+        if( userBefore === null ){
+          let userNotFoundError = new Error(`No user found in session"`);
+          userNotFoundError.name = "NotFoundError";
+          throw userNotFoundError;
+        }
+        if( userBefore.pfpFilename !== null ){
+          return fs.rm( "public/uploads/" + userBefore.pfpFilename );
+        } else {
+          return undefined;
+        }
+      })
+      .then( () => {
+        return UserModel.findById( userId , {}, { new: true });
+      })
+      .then( ( user ) => {
+        resolve( user );
       })
       .catch( ( err ) => {
         reject( err );

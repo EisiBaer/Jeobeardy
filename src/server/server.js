@@ -34,7 +34,7 @@ app.use(helmet(
         "media-src": ["'self'", "data:"],
         "style-src-elem": ["'self'", "'unsafe-inline'"],
         "connect-src": ["'self'", "ws:"],
-	"img-src": ["'self'", "blob:", "data:"],
+	      "img-src": ["'self'", "blob:", "data:"],
       }
     }
   }

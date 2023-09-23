@@ -1,6 +1,9 @@
+import { Modal } from "bootstrap"; 
+
 import BoardEntry from "@/models/BoardEntry";
 import Category from "@/models/Category";
 import Board from "@/models/Board";
+
 
 export function boardResponseToBoardModel( boardResponse ){
     let categories = [];
@@ -28,4 +31,10 @@ export function boardResponseToBoardModel( boardResponse ){
     }
 
     return new Board( boardResponse._id, boardResponse.name, categories );
+}
+
+export function openModal( modalId ){
+    let modalElement = document.getElementById( modalId );
+    let modalInstance = Modal.getOrCreateInstance( modalElement );
+    modalInstance.show();
 }

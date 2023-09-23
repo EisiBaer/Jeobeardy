@@ -247,10 +247,10 @@ export const useGameStore = defineStore('game', {
         this.websocketConnection.onerror = ( _event ) => {
           console.error("Websocket Error");
         };
-        this.websocketConnection.onclose = ( event ) => {
+        this.websocketConnection.onclose = ( _event ) => {
           clearInterval( this.keepAliveInterval );
           this.keepAliveInterval = undefined;
-	  const userStore = useUserStore();
+	        const userStore = useUserStore();
           userStore.resetInitialUserDataPromise();
           userStore.initialUserPromise
           .then( ( userData ) => {
@@ -317,7 +317,7 @@ export const useGameStore = defineStore('game', {
           this.players = data.payload.players;
         }
       });
-      this.addSocketListener("payloadIncomplete", ( data ) => {
+      this.addSocketListener("payloadIncomplete", ( _data ) => {
         console.error("Invalid or Incomplete Payload!");
       });
     }

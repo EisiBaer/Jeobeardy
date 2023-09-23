@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Modal } from "bootstrap";
+import { openModal } from "@/services/util";
 
 import BoardEntryEditView from '@/components/views/BoardEntryEditView.vue'; 
 import CategoryEditView from '@/components/views/CategoryEditView.vue'; 
@@ -192,13 +192,6 @@ function exitCreatePage(){
   router.push("/profile");
 }
 
-//Maybe extract
-function openModal( modalId ){
-  let modalElement = document.getElementById( modalId );
-  let modalInstance = Modal.getOrCreateInstance( modalElement );
-  modalInstance.show();
-}
-
 function toggleBottomView(){
   showingBottomView.value = !showingBottomView.value;
 }
@@ -328,7 +321,6 @@ if( route.params.boardId !== undefined ){
       :buttonList="[
         {
 					text: 'Yes, discard!',
-					emitsEvent: 'discardClicked',
 					bgColorClass: 'btn-danger',
 				},
 				{
