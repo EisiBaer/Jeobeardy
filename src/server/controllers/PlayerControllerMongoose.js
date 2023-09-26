@@ -5,10 +5,11 @@ const PlayerModel = require("../models/PlayerModel");
  * @param {String} hostName
  * @returns A promise which resolves when a new player has been created. Rejects if an error occurs
  */
-exports.addPlayer = (playerName) => {
+exports.addPlayer = (playerName, playerImage) => {
   return new Promise((resolve, reject) => {
     let newPlayer = new PlayerModel({
       name: playerName,
+      pfpFilename: playerImage,
       points: 0,
     });
 

@@ -72,7 +72,7 @@ function logoutButtonClicked(_event){
                         <font-awesome-icon icon="fa-solid fa-angle-down" size="sm" class="me-2"/>
                         <span class="me-1">{{ userStore.username }}</span>
                         <ProfilePicture
-                          :sizingClasses="['pfp-sizing-navbar']"
+                          :sizing="'2em'"
                         />
                       </div>
                     </a>
@@ -107,7 +107,7 @@ function logoutButtonClicked(_event){
 				            <font-awesome-icon icon="fa-solid fa-angle-down" size="sm" class="me-2"/>
                     <span class="me-1">{{ userStore.username }}</span>
                     <ProfilePicture
-                      :sizingClasses="['pfp-sizing-navbar']"
+                      :sizing="'2em'"
                     />
                   </div>
                 </a>

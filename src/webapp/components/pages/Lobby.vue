@@ -3,8 +3,8 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter, onBeforeRouteLeave, useRoute } from 'vue-router';
 
 import { useGameStore } from '@/stores/GameStore';
-
 import BoardListView from "@/components/views/BoardListView.vue";
+import ProfilePicture from '@/components/blocks/ProfilePicture.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -12,6 +12,13 @@ const gameStore = useGameStore();
 
 let selectedBoardId = ref("0");
 let showBoardMessage = ref( false );
+
+let protocol = ('https:' == document.location.protocol ? 'https://' : 'http://');
+let hostname = window.location.hostname;
+if( window.location.hostname.includes("localhost" ) ){
+    hostname += ':3000';
+}
+const API_URL = `${protocol}${hostname}/api`;
 
 
 function startGame(){
@@ -127,7 +134,15 @@ onBeforeRouteLeave((to, from) => {
         <div class="col-4 my-3">
           <div class="card bg-primary">
             <div class="card-body fs-4 text-center">
-              {{ playerIdx + 1 }} - {{ player.name }}
+              <div class="d-flex justify-content-center align-items-center">
+                <ProfilePicture 
+                :srcOverride="API_URL + '/user/pfp/' + player.pfpFilename"
+                :sizing="'2.5em'"
+                />
+                <span class="ms-3">
+                  {{ playerIdx + 1 }} - {{ player.name }}
+                </span>
+              </div>
             </div>
           </div>
         </div>

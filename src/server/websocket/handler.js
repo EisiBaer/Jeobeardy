@@ -28,7 +28,7 @@ exports.handleMessage = ( gameSocketList, socket, dataRaw ) => {
     switch( data.event ){
       case "joinGame":
         if( payload.gameCode !== undefined && payload.playerName !== undefined ){
-          playerController.addPlayer( payload.playerName )
+          playerController.addPlayer( payload.playerName, payload.playerImage )
           .then( ( player ) => {
             if( socket.locals === undefined ){
               socket.locals = {};

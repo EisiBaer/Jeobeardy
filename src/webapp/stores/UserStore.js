@@ -44,7 +44,11 @@ export const useUserStore = defineStore('user', {
     setUser( user ){
       this.loggedIn = true;
       this.username = user.username;
-      this.pfpFilename = user.pfpFilename;
+      if( user.pfpFilename ){
+        this.pfpFilename = user.pfpFilename;
+      } else {
+        this.pfpFilename = null;
+      }
     },
     resetInitialUserDataPromise(){
       this.initialUserPromise = new Promise( (resolve, reject ) => {

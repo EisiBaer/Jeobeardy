@@ -135,7 +135,7 @@ export const useGameStore = defineStore('game', {
         }
       });
     },
-    joinGame( playerName ){
+    joinGame( playerName, playerImage ){
       return new Promise( ( resolve, reject ) =>{
         if( this.websocketConnection.readyState === 1 ){
           
@@ -160,6 +160,7 @@ export const useGameStore = defineStore('game', {
             payload: {
               gameCode: this.gameCode,
               playerName: this.playerName,
+              playerImage: playerImage,
             }
           }
           this.websocketConnection.send( JSON.stringify( sendObj ) );

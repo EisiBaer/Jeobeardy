@@ -1,8 +1,10 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router";
+import { ref } from "vue";
+
 import { useUserStore } from "@/stores/UserStore";
 import { useGameStore } from "@/stores/GameStore";
-import { ref } from "vue";
+import ProfilePicture from "@/components/blocks/ProfilePicture.vue";
 
 let errorMessage = ref("");
 let playerName = ref("");
@@ -12,13 +14,14 @@ let forwardTo = { name: "gameLobby", params: { gameId: -1 } };
 const router = useRouter();
 const route = useRoute();
 const gameStore = useGameStore();
+const userStore = useUserStore();
 
 function joinButtonClicked(_event) {
   if( joinRequest.value === true ){
     return;
   }
   joinRequest.value = true;
-  gameStore.joinGame( playerName.value )
+  gameStore.joinGame( playerName.value, userStore.pfpFilename )
   .then( ( gameId ) => {
     forwardTo.params.gameId = gameId;
     router.push( forwardTo );
@@ -29,6 +32,10 @@ function joinButtonClicked(_event) {
   .finally( () => {
     joinRequest.value = false;
   });
+}
+
+if( userStore.loggedIn ){
+  playerName.value = userStore.username;
 }
 
 let gameId = route.params.gameId;
@@ -91,6 +98,11 @@ if( gameId ){
           </div>
           <div class="card-body text-center">
             <div class="d-flex flex-column h-100 w-100 align-items-center justify-content-center">
+              <div>
+                <ProfilePicture
+                  :sizing="'8rem'"
+                />
+              </div>
               <div class="d-flex px-3 w-100">
                 <div class="w-100 text-start">
                   <label for="username" class="fs-5 mb-1">Username</label>

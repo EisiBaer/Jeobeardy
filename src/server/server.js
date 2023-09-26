@@ -21,24 +21,24 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(helmet(
-  {
-    contentSecurityPolicy: {
-      // useDefaults: false,
-      directives: {
-        "default-src": ["'self'"],
-        "object-src": ["'none'"],
-        "script-src": ["'unsafe-inline'", "'unsafe-eval'", "'self'" ],
-        "base-uri": ["'none'"],
-        "frame-src": ["'none'"],
-        "media-src": ["'self'", "data:"],
-        "style-src-elem": ["'self'", "'unsafe-inline'"],
-        "connect-src": ["'self'", "ws:"],
-	      "img-src": ["'self'", "blob:", "data:"],
-      }
-    }
-  }
-));
+// app.use(helmet(
+//   {
+//     contentSecurityPolicy: {
+//       // useDefaults: false,
+//       directives: {
+//         "default-src": ["'self'"],
+//         "object-src": ["'none'"],
+//         "script-src": ["'unsafe-inline'", "'unsafe-eval'", "'self'" ],
+//         "base-uri": ["'none'"],
+//         "frame-src": ["'none'"],
+//         "media-src": ["'self'", "data:"],
+//         "style-src-elem": ["'self'", "'unsafe-inline'"],
+//         "connect-src": ["'self'", "ws:"],
+// 	      "img-src": ["'self'", "blob:", "data:"],
+//       }
+//     }
+//   }
+// ));
 
 
 const mongoDB = process.env.API_MONGO_CONN_URI;

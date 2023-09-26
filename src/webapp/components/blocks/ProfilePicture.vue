@@ -9,9 +9,9 @@ const props = defineProps({
         default: null,
         required: false,
     },
-    sizingClasses: {
-        type: Array,
-        default: () => ["pfp-sizing"],
+    sizing: {
+        type: String,
+        default: "10rem",
         required: false,
     },
     isPreview: {
@@ -47,7 +47,7 @@ const pfpSrc = computed( () => {
 <template>
     <div>
         <div class="border border-1 border-white rounded-3 overflow-hidden">
-            <img :src="pfpSrc" alt="Profile Picture of the user"  class="pfp" :class="sizingClasses" />
+            <img :src="pfpSrc" alt="Profile Picture of the user"  class="pfp" :style="[ { 'width': props.sizing }, { 'height': props.sizing } ]" />
             <div v-show="props.isPreview" class="position-relative">
                 <span class="position-absolute bottom-0 end-0 bg-black bg-opacity-50 px-1 rounded-2">
                     Preview
@@ -57,16 +57,3 @@ const pfpSrc = computed( () => {
         </div>
     </div>
 </template>
-
-<style scoped>
-.pfp-sizing{
-    height: 10rem;
-    width: 10rem;
-    max-height: 100vh;
-    max-width: 100vw;
-}
-.pfp-sizing-navbar{
-  height: 2em;
-  width: 2em;
-}
-</style>
