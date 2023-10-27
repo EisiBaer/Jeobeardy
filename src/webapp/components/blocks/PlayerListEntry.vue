@@ -1,4 +1,5 @@
 <script setup>
+import ProfilePicture from '@/components/blocks/ProfilePicture.vue';
 
 const props = defineProps({
   player: Object,
@@ -18,6 +19,13 @@ const props = defineProps({
 
 const emit = defineEmits(["manualPointsAdjustment", "answerRuled", "revealPlayerAnswer", "letPlayerChoose"]);
 
+let protocol = ('https:' == document.location.protocol ? 'https://' : 'http://');
+let hostname = window.location.hostname;
+if( window.location.hostname.includes("localhost" ) ){
+    hostname += ':3000';
+}
+const API_URL = `${protocol}${hostname}/api`;
+
 function revealAnswer(){
 	emit("revealPlayerAnswer", props.player._id);
 }
@@ -33,21 +41,29 @@ function letPlayerChoose(){
 		<div class="card-body p-2">
 			<div class="row">
 				<div class="col position-relative">
-					<h5 class="mb-0 text-truncate">
+					<div class="d-flex justify-content-start align-content-center">
 						<template v-if="props.player.isAnswering">
-							<font-awesome-layers :title="'Player is answering'">
-								<font-awesome-icon class="text-pink-accent-primary" icon="fa-solid fa-square" size="lg" fade style="--fa-animation-duration:2s" />
-								<font-awesome-icon class="text-white" icon="fa-solid fa-angle-right" size="sm" />
-							</font-awesome-layers>
+							<span class="align-self-center me-2">
+								<font-awesome-layers :title="'Player is answering'">
+									<font-awesome-icon class="text-pink-accent-primary" icon="fa-solid fa-square" size="lg" fade style="--fa-animation-duration:2s" />
+									<font-awesome-icon class="text-white" icon="fa-solid fa-angle-right" size="sm" />
+								</font-awesome-layers>
+							</span>
 						</template>
-						{{ props.player.name }}
-					</h5>
-					<span
-						v-show="props.player.isChoosing === true"
-						class="position-absolute end-0 top-50 translate-middle-y bg-pink-accent-primary rounded-1 me-2 px-1"
-					>
-						<font-awesome-icon class="text-light" icon="fa-solid fa-hand-pointer" />
-					</span>
+						<ProfilePicture 
+							:sizing="'2em'"
+							:srcOverride="API_URL + '/user/pfp/' + props.player.pfpFilename"
+						/>
+						<h5 class="mb-0 ms-2 text-truncate align-self-center">
+							{{ props.player.name }}
+						</h5>
+						<span
+							v-show="props.player.isChoosing === true"
+							class="position-absolute end-0 top-50 translate-middle-y bg-pink-accent-primary rounded-1 me-2 px-1"
+							>
+							<font-awesome-icon class="text-light" icon="fa-solid fa-hand-pointer" />
+						</span>
+					</div>
 				</div>
 			</div>
 

@@ -46,7 +46,7 @@ const pfpSrc = computed( () => {
 
 <template>
     <div>
-        <div class="border border-1 border-white rounded-3 overflow-hidden">
+        <div class="border border-1 border-white rounded-3 overflow-hidden" :style="[ { 'width': props.sizing }, { 'height': props.sizing } ]" >
             <img :src="pfpSrc" alt="Profile Picture of the user"  class="pfp" :style="[ { 'width': props.sizing }, { 'height': props.sizing } ]" />
             <div v-show="props.isPreview" class="position-relative">
                 <span class="position-absolute bottom-0 end-0 bg-black bg-opacity-50 px-1 rounded-2">
