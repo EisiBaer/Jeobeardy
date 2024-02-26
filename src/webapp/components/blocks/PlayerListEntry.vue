@@ -1,5 +1,6 @@
 <script setup>
 import ProfilePicture from '@/components/blocks/ProfilePicture.vue';
+import defaultPfp from '@/assets/images/PFP_BearHead.svg';
 
 const props = defineProps({
   player: Object,
@@ -52,7 +53,7 @@ function letPlayerChoose(){
 						</template>
 						<ProfilePicture 
 							:sizing="'2em'"
-							:srcOverride="API_URL + '/user/pfp/' + props.player.pfpFilename"
+							:srcOverride="(props.player.pfpFilename ? API_URL + '/user/pfp/' + props.player.pfpFilename : defaultPfp)"
 						/>
 						<h5 class="mb-0 ms-2 text-truncate align-self-center">
 							{{ props.player.name }}

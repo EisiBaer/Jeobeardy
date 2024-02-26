@@ -125,8 +125,8 @@ router.post("/signup", (req, res)=>{
 router.post("/login", (req, res)=>{
     if( req.session.user !== undefined ){
         userController.findUser( req.session.user )
-        .then( ( res ) => {
-            res.send({success: true, user: { username: req.session.user } } );
+        .then( ( user ) => {
+            res.send({success: true, user: { username: user.username, pfpFilename: user.pfpFilename } } );
         })
         .catch( ( err ) => {
             console.error( err );
@@ -138,7 +138,7 @@ router.post("/login", (req, res)=>{
             return setSessionUser( req, user );
         })
         .then( ( user ) => {
-            res.send({success: true, user: { username: user.username } } );
+            res.send({success: true, user: { username: user.username, pfpFilename: user.pfpFilename } } );
         })
         .catch( (err) => {
             if( err.name === "WrongCredentialsError" ){

@@ -5,6 +5,7 @@ import { useRouter, onBeforeRouteLeave, useRoute } from 'vue-router';
 import { useGameStore } from '@/stores/GameStore';
 import BoardListView from "@/components/views/BoardListView.vue";
 import ProfilePicture from '@/components/blocks/ProfilePicture.vue';
+import defaultPfp from '@/assets/images/PFP_BearHead.svg';
 
 const router = useRouter();
 const route = useRoute();
@@ -136,7 +137,7 @@ onBeforeRouteLeave((to, from) => {
             <div class="card-body fs-4 text-center">
               <div class="d-flex justify-content-center align-items-center">
                 <ProfilePicture 
-                :srcOverride="API_URL + '/user/pfp/' + player.pfpFilename"
+                :srcOverride="(player.pfpFilename ? API_URL + '/user/pfp/' + player.pfpFilename : defaultPfp)"
                 :sizing="'2.5em'"
                 />
                 <span class="ms-3">

@@ -91,7 +91,7 @@ function handleModalButtonClick( buttonIndex ){
                         Save
                     </button>
                     <button class="btn btn-danger" :disabled="userStore.pfpFilename === null" @click="deleteProfilePicture">
-                        <font-awesome-icon icon="fa-solid fa-floppy-disk" />
+                        <font-awesome-icon icon="fa-solid fa-trash" />
                         Delete Current Profile Picture
                     </button>
                 </div>

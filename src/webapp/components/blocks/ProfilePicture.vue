@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 
+import defaultPfp from '@/assets/images/PFP_BearHead.svg';
 import { useUserStore } from "@/stores/UserStore"
 
 const props = defineProps({
@@ -31,23 +32,14 @@ if( window.location.hostname.includes("localhost" ) ){
 }
 const API_URL = `${protocol}${hostname}/api`;
 
-const pfpSrc = computed( () => {
-    if( props.srcOverride !== null ){
-        return props.srcOverride;
-    } else if( userStore.pfpFilename === null ){
-        return "/src/webapp/assets/images/PFP_BearHead.svg";
-    } else {
-        return `${API_URL}/user/pfp/${userStore.pfpFilename}`;
-    }
-})
-
-
 </script>
 
 <template>
     <div>
         <div class="border border-1 border-white rounded-3 overflow-hidden" :style="[ { 'width': props.sizing }, { 'height': props.sizing } ]" >
-            <img :src="pfpSrc" alt="Profile Picture of the user"  class="pfp" :style="[ { 'width': props.sizing }, { 'height': props.sizing } ]" />
+            <img v-if="props.srcOverride !== null" :src="props.srcOverride" alt="Profile Picture of the user"  class="pfp" :style="[ { 'width': props.sizing }, { 'height': props.sizing } ]" />
+            <img v-else-if="userStore.pfpFilename === null" :src="defaultPfp" alt="Profile Picture of the user"  class="pfp" :style="[ { 'width': props.sizing }, { 'height': props.sizing } ]" />
+            <img v-else :src="`${API_URL}/user/pfp/${userStore.pfpFilename}`" alt="Profile Picture of the user"  class="pfp" :style="[ { 'width': props.sizing }, { 'height': props.sizing } ]" />
             <div v-show="props.isPreview" class="position-relative">
                 <span class="position-absolute bottom-0 end-0 bg-black bg-opacity-50 px-1 rounded-2">
                     Preview
