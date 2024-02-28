@@ -258,7 +258,7 @@ exports.findGameAcceptingAnswers = ( id ) => {
 exports.setPlayerPointsAndReturnGame = ( gameId, playerId, pointsAdjusted ) => {
   return new Promise((resolve, reject) => {
     PlayerModel.findByIdAndUpdate(
-      mongoose.Types.ObjectId( playerId ),
+      new mongoose.Types.ObjectId( playerId ),
       { 
         $set: {
           points: pointsAdjusted,
@@ -328,7 +328,7 @@ exports.addGame = (hostId) => {
  */
 exports.deleteGame = ( gameId ) => {
   return new Promise((resolve, reject) => {
-    GameModel.findByIdAndRemove( gameId )
+    GameModel.findByIdAndDelete( gameId )
     .then( ( game ) => {
       if( game === null ){
         throw new Error( "No Game found for deletion" );

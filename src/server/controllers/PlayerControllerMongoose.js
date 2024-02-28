@@ -30,7 +30,7 @@ exports.addPlayer = (playerName, playerImage) => {
  */
 exports.deletePlayer = ( playerId ) => {
   return new Promise((resolve, reject) => {
-    PlayerModel.findByIdAndRemove( playerId )
+    PlayerModel.findByIdAndDelete( playerId )
     .then( ( deletedUser ) => {
         resolve( deletedUser );
     })

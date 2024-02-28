@@ -63,7 +63,7 @@ function loginButtonClicked(_event) {
                   <input
                     v-model="username"
                     v-focus
-                    class="form-control form-control-lg bg-gray text-left mb-2 text-dark"
+                    class="form-control form-control-lg bg-gray mb-2 text-dark placeholder-dark"
                     type="text"
                     name="username"
                     id="username"
@@ -73,7 +73,7 @@ function loginButtonClicked(_event) {
                   <label for="password" class="fs-5 mb-1">Password</label>
                   <input
                     v-model="password"
-                    class="form-control form-control-lg bg-gray text-left mb-3 text-dark"
+                    class="form-control form-control-lg bg-gray mb-3 text-dark placeholder-dark"
                     type="password"
                     name="password"
                     id="password"

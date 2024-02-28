@@ -109,7 +109,7 @@ if( gameId ){
                   <input
                     v-model="playerName"
                     v-focus
-                    class="form-control form-control-lg bg-gray text-left mb-2 text-dark"
+                    class="form-control form-control-lg bg-gray mb-2 text-dark placeholder-dark"
                     type="text"
                     name="playername"
                     id="playername"

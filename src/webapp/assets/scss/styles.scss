@@ -197,3 +197,9 @@ $utilities: map-merge(
   max-width: 100vw;
   max-height: 100vh;
 }
+
+//Temporary solution to not adjusting placeholder colors in bootstrap v5.3
+.placeholder-dark::placeholder {
+  color: $gray-600;
+  opacity: 1;
+}
