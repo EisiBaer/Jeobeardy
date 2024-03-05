@@ -2,6 +2,9 @@
 
 Jeobeardy (/dʒebeərdi/) is similiar to but not quite like Jeopardy. It is a quiz game where you can create your own boards with categories and then make your friends compete in a fun and interactive way
 
+## Migrated!
+This repository is no longer up to date and has been migrated.
+
 ## Code Structure
 
 - Server-side code can be found inside the ./src/server directory
